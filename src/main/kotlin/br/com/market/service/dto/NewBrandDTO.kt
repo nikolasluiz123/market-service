@@ -1,6 +1,6 @@
 package br.com.market.service.dto
 
-data class BrandDTO(
+data class NewBrandDTO(
     var id: Long? = null,
     var name: String
 )

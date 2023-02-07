@@ -1,8 +1,12 @@
 package br.com.market.service.controller
 
-import br.com.market.service.dto.ProductDTO
+import br.com.market.service.dto.NewProductDTO
+import br.com.market.service.dto.UpdateProductDTO
 import br.com.market.service.service.ProductService
 import br.com.market.service.view.ProductView
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -15,7 +19,14 @@ class ProductController(private val service: ProductService) {
     }
 
     @PostMapping
-    fun saveProduct(@RequestBody productDTO: ProductDTO) {
+    @Transactional(rollbackFor = [Exception::class])
+    fun saveProduct(@RequestBody productDTO: NewProductDTO) {
         service.saveProduct(productDTO)
+    }
+
+    @PutMapping
+    @Transactional(rollbackFor = [Exception::class])
+    fun updateProduct(@RequestBody productDTO: UpdateProductDTO) {
+        service.updateProduct(productDTO)
     }
 }
