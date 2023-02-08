@@ -1,7 +1,7 @@
 package br.com.market.service.dto.brand
 
-data class UpdateBrandDTO(
+data class BrandView(
     var id: Long,
     var name: String,
-    var sumCount: Int = 0
+    var count: Int
 )
