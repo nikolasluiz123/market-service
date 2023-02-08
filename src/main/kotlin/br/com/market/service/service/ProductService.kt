@@ -1,9 +1,10 @@
 package br.com.market.service.service
 
+import br.com.market.service.dto.DeleteProductDTO
 import br.com.market.service.dto.NewProductDTO
 import br.com.market.service.dto.UpdateProductDTO
+import br.com.market.service.mappers.BrandDTOMapper
 import br.com.market.service.mappers.ProductViewMapper
-import br.com.market.service.models.Brand
 import br.com.market.service.models.Product
 import br.com.market.service.models.ProductBrand
 import br.com.market.service.repository.BrandRepository
@@ -21,12 +22,12 @@ class ProductService(
 ) {
 
     fun findAllProducts(): List<ProductView> {
-        return productRepository.findAll().map(ProductViewMapper()::map)
+        return productRepository.findAll().map(ProductViewMapper::toDTO)
     }
 
     fun saveProduct(productDTO: NewProductDTO) {
         val product = Product(name = productDTO.name)
-        val brands = productDTO.brands.map { Brand(name = it) }
+        val brands = productDTO.brands.map(BrandDTOMapper::toModel)
 
         productRepository.save(product)
         brandRepository.saveAll(brands)
@@ -43,5 +44,19 @@ class ProductService(
             val brand = brandRepository.findById(it.id).orElseThrow(::NotFoundException)
             brand.name = it.name
         }
+    }
+
+    fun deleteProduct(productDTO: DeleteProductDTO) {
+        val productBrandList = productBrandRepository.findByProductId(productDTO.id)
+
+        val brandIds = productBrandList.map { productBrand ->
+            val brandId = productBrand.brand.id
+            productBrandRepository.deleteById(productBrand.id!!)
+            brandId
+        }
+
+        brandIds.forEach { brandRepository.deleteById(it!!) }
+
+        productRepository.deleteById(productDTO.id)
     }
 }

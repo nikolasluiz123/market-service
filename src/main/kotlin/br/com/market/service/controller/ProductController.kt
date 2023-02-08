@@ -1,11 +1,10 @@
 package br.com.market.service.controller
 
+import br.com.market.service.dto.DeleteProductDTO
 import br.com.market.service.dto.NewProductDTO
 import br.com.market.service.dto.UpdateProductDTO
 import br.com.market.service.service.ProductService
 import br.com.market.service.view.ProductView
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
-import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
@@ -28,5 +27,11 @@ class ProductController(private val service: ProductService) {
     @Transactional(rollbackFor = [Exception::class])
     fun updateProduct(@RequestBody productDTO: UpdateProductDTO) {
         service.updateProduct(productDTO)
+    }
+
+    @DeleteMapping
+    @Transactional(rollbackFor = [Exception::class])
+    fun deleteProduct(@RequestBody productDTO: DeleteProductDTO) {
+        service.deleteProduct(productDTO)
     }
 }

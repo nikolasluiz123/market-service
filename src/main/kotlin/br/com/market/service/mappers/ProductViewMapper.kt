@@ -3,10 +3,10 @@ package br.com.market.service.mappers
 import br.com.market.service.models.Product
 import br.com.market.service.view.ProductView
 
-class ProductViewMapper : Mapper<Product, ProductView> {
+object ProductViewMapper : Mapper<Product, ProductView> {
 
-    override fun map(value: Product): ProductView {
-        return ProductView(id = value.id, name = value.name)
-    }
+    override fun toDTO(value: Product) = ProductView(id = value.id, name = value.name)
+
+    override fun toModel(value: ProductView) = Product(id = value.id, name = value.name)
 
 }
