@@ -1,6 +1,6 @@
 package br.com.market.service.mappers
 
-import br.com.market.service.dto.NewBrandDTO
+import br.com.market.service.dto.brand.NewBrandDTO
 import br.com.market.service.models.Brand
 
 object BrandDTOMapper : Mapper<Brand, NewBrandDTO> {

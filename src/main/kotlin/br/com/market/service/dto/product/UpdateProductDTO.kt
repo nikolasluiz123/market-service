@@ -1,4 +1,6 @@
-package br.com.market.service.dto
+package br.com.market.service.dto.product
+
+import br.com.market.service.dto.brand.UpdateBrandDTO
 
 data class UpdateProductDTO(
     var id: Long,

@@ -13,5 +13,6 @@ data class ProductBrand(
     @OneToOne
     var product: Product = Product(),
     @OneToOne
-    var brand: Brand = Brand()
+    var brand: Brand = Brand(),
+    var count: Int = 0
 )

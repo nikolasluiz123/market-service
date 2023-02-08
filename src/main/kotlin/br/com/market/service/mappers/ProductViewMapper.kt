@@ -1,7 +1,7 @@
 package br.com.market.service.mappers
 
 import br.com.market.service.models.Product
-import br.com.market.service.view.ProductView
+import br.com.market.service.dto.product.ProductView
 
 object ProductViewMapper : Mapper<Product, ProductView> {
 

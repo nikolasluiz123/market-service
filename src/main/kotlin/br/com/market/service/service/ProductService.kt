@@ -1,16 +1,16 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.DeleteProductDTO
-import br.com.market.service.dto.NewProductDTO
-import br.com.market.service.dto.UpdateProductDTO
+import br.com.market.service.dto.product.DeleteProductDTO
+import br.com.market.service.dto.product.NewProductDTO
+import br.com.market.service.dto.product.UpdateProductDTO
 import br.com.market.service.mappers.BrandDTOMapper
 import br.com.market.service.mappers.ProductViewMapper
 import br.com.market.service.models.Product
 import br.com.market.service.models.ProductBrand
-import br.com.market.service.repository.BrandRepository
-import br.com.market.service.repository.ProductBrandRepository
-import br.com.market.service.repository.ProductRepository
-import br.com.market.service.view.ProductView
+import br.com.market.service.repository.brand.BrandRepository
+import br.com.market.service.repository.product.ProductBrandRepository
+import br.com.market.service.repository.product.ProductRepository
+import br.com.market.service.dto.product.ProductView
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
 

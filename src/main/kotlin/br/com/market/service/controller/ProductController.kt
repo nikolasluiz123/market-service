@@ -1,10 +1,10 @@
 package br.com.market.service.controller
 
-import br.com.market.service.dto.DeleteProductDTO
-import br.com.market.service.dto.NewProductDTO
-import br.com.market.service.dto.UpdateProductDTO
+import br.com.market.service.dto.product.DeleteProductDTO
+import br.com.market.service.dto.product.NewProductDTO
+import br.com.market.service.dto.product.UpdateProductDTO
 import br.com.market.service.service.ProductService
-import br.com.market.service.view.ProductView
+import br.com.market.service.dto.product.ProductView
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 

@@ -1,4 +1,4 @@
-package br.com.market.service.view
+package br.com.market.service.dto.product
 
 data class ProductView(
     var id: Long? = null,
