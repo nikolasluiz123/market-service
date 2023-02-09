@@ -1,11 +1,14 @@
 package br.com.market.service.repository.product
 
 import br.com.market.service.dto.brand.UpdateStorageDTO
+import br.com.market.service.exeption.InvalidStorageOperationException
 import br.com.market.service.extensions.setParameters
 import br.com.market.service.models.ProductBrand
 import br.com.market.service.query.Parameter
 import jakarta.persistence.EntityManager
+import jakarta.persistence.NoResultException
 import jakarta.persistence.PersistenceContext
+import org.springframework.dao.EmptyResultDataAccessException
 import java.util.StringJoiner
 
 class ProductBrandRepositoryImpl : CustomProductBrandRepository {
@@ -32,6 +35,10 @@ class ProductBrandRepositoryImpl : CustomProductBrandRepository {
     }
 
     override fun sumStorageCount(storageDTO: UpdateStorageDTO) {
+        if (notHaveDataForUpdate(storageDTO)){
+            throw NoResultException("Não há registro de estoque para o Produto e/ou Marca especificado(s)")
+        }
+
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
@@ -52,8 +59,12 @@ class ProductBrandRepositoryImpl : CustomProductBrandRepository {
     }
 
     override fun subtractStorageCount(storageDTO: UpdateStorageDTO) {
+        if (notHaveDataForUpdate(storageDTO)) {
+            throw NoResultException("Não há registro de estoque para o Produto e/ou Marca especificado(s)")
+        }
+
         if (newStorageCountIsInvalid(storageDTO)) {
-            throw IllegalArgumentException("A quantidade a ser reduzida é maior do que a quantidade em estoque.")
+            throw InvalidStorageOperationException("A quantidade a ser reduzida é maior do que a quantidade em estoque.")
         }
 
         val params = mutableListOf<Parameter>()
@@ -93,5 +104,24 @@ class ProductBrandRepositoryImpl : CustomProductBrandRepository {
         query.setParameters(params)
 
         return query.singleResult
+    }
+
+    private fun notHaveDataForUpdate(storageDTO: UpdateStorageDTO): Boolean {
+        val params = mutableListOf<Parameter>()
+        val sql = StringJoiner("\n\t")
+
+        with(sql) {
+            add("select (")
+            add("        not exists(select pb.id from product_brand pb where pb.product_id = :pProductId and pb.brand_id = :pBrandId)")
+            add("       )")
+        }
+
+        params.add(Parameter("pProductId", storageDTO.productId))
+        params.add(Parameter("pBrandId", storageDTO.brandId))
+
+        val query = entityManager.createNativeQuery(sql.toString(), Boolean::class.java)
+        query.setParameters(params)
+
+        return query.singleResult as Boolean
     }
 }

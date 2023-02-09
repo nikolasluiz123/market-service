@@ -2,6 +2,7 @@ package br.com.market.service.service
 
 import br.com.market.service.dto.product.DeleteProductDTO
 import br.com.market.service.dto.product.NewProductDTO
+import br.com.market.service.dto.product.ProductView
 import br.com.market.service.dto.product.UpdateProductDTO
 import br.com.market.service.mappers.BrandDTOMapper
 import br.com.market.service.mappers.ProductViewMapper
@@ -10,8 +11,7 @@ import br.com.market.service.models.ProductBrand
 import br.com.market.service.repository.brand.BrandRepository
 import br.com.market.service.repository.product.ProductBrandRepository
 import br.com.market.service.repository.product.ProductRepository
-import br.com.market.service.dto.product.ProductView
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -37,11 +37,17 @@ class ProductService(
     }
 
     fun updateProduct(productDTO: UpdateProductDTO) {
-        val product = productRepository.findById(productDTO.id).orElseThrow(::NotFoundException)
+        val product = productRepository.findById(productDTO.id).orElseThrow {
+            EntityNotFoundException("Não foi possível encontrar o produto com o identificador especificado.")
+        }
+
         product.name = productDTO.name
 
         productDTO.brands.forEach {
-            val brand = brandRepository.findById(it.id).orElseThrow(::NotFoundException)
+            val brand = brandRepository.findById(it.id).orElseThrow {
+                EntityNotFoundException("Não foi possível encontrar a marca com o identificador especificado.")
+            }
+
             brand.name = it.name
         }
     }

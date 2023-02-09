@@ -5,6 +5,7 @@ import br.com.market.service.dto.product.NewProductDTO
 import br.com.market.service.dto.product.UpdateProductDTO
 import br.com.market.service.service.ProductService
 import br.com.market.service.dto.product.ProductView
+import jakarta.validation.Valid
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
@@ -19,7 +20,7 @@ class ProductController(private val service: ProductService) {
 
     @PostMapping
     @Transactional(rollbackFor = [Exception::class])
-    fun saveProduct(@RequestBody productDTO: NewProductDTO) {
+    fun saveProduct(@RequestBody @Valid productDTO: NewProductDTO) {
         service.saveProduct(productDTO)
     }
 
