@@ -7,6 +7,7 @@ data class UpdateProductDTO(
     var id: Long,
     @field:NotEmpty(message = "O atributo name não pode ser vazio")
     var name: String,
+    var imageUrl: String = "",
     @field:NotEmpty(message = "O atributo brands não pode ser vazio")
     var brands: List<UpdateBrandDTO>
 )
