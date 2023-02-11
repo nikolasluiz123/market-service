@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/marcas")
+@RequestMapping("/api/v1/brand")
 class BrandController(private val service: BrandService) {
 
     @GetMapping("/{productId}")
@@ -20,13 +20,13 @@ class BrandController(private val service: BrandService) {
         return service.findProductBrands(productId)
     }
 
-    @PostMapping("/adicionar")
+    @PostMapping("/add")
     @Transactional
     fun sumStorageCount(@RequestBody storageDTO: UpdateStorageDTO) {
         service.sumStorageCount(storageDTO)
     }
 
-    @PostMapping("/subtrair")
+    @PostMapping("/subtract")
     @Transactional
     fun subtractStorageCount(@RequestBody storageDTO: UpdateStorageDTO) {
         service.subtractStorageCount(storageDTO)

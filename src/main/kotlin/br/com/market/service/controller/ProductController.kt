@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/produtos")
+@RequestMapping("/api/v1/product")
 class ProductController(private val service: ProductService) {
 
     @GetMapping
