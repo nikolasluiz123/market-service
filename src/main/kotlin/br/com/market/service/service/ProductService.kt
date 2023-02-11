@@ -1,9 +1,6 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.product.DeleteProductDTO
-import br.com.market.service.dto.product.NewProductDTO
-import br.com.market.service.dto.product.ProductView
-import br.com.market.service.dto.product.UpdateProductDTO
+import br.com.market.service.dto.product.*
 import br.com.market.service.mappers.BrandDTOMapper
 import br.com.market.service.mappers.ProductViewMapper
 import br.com.market.service.models.Product
