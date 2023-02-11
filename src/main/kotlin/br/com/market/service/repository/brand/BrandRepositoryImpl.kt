@@ -23,9 +23,9 @@ class BrandRepositoryImpl : CustomBrandRepository {
             add("select b.id as id,")
             add("       p.name || ' ' || b.name as nomeProduto,")
             add("       pb.count as estoque")
-            add("from product p")
-            add("inner join product_brand pb on p.id = pb.product_id")
-            add("inner join brand b on b.id = pb.brand_id")
+            add("from products p")
+            add("inner join products_brands pb on p.id = pb.product_id")
+            add("inner join brands b on b.id = pb.brand_id")
             add("where p.id = :pProdutoId")
         }
 

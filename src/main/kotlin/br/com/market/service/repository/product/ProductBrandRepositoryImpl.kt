@@ -112,7 +112,7 @@ class ProductBrandRepositoryImpl : CustomProductBrandRepository {
 
         with(sql) {
             add("select (")
-            add("        not exists(select pb.id from product_brand pb where pb.product_id = :pProductId and pb.brand_id = :pBrandId)")
+            add("        not exists(select pb.id from products_brands pb where pb.product_id = :pProductId and pb.brand_id = :pBrandId)")
             add("       )")
         }
 

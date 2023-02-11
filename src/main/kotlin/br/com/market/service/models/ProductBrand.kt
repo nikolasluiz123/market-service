@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToOne
 
-@Entity
+@Entity(name = "products_brands")
 data class ProductBrand(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
