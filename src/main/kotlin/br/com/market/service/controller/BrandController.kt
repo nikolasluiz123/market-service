@@ -3,6 +3,7 @@ package br.com.market.service.controller
 import br.com.market.service.dto.brand.BrandView
 import br.com.market.service.dto.brand.UpdateStorageDTO
 import br.com.market.service.service.BrandService
+import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -22,13 +23,15 @@ class BrandController(private val service: BrandService) {
 
     @PostMapping("/add")
     @Transactional
-    fun sumStorageCount(@RequestBody storageDTO: UpdateStorageDTO) {
+    fun sumStorageCount(@RequestBody storageDTO: UpdateStorageDTO): ResponseEntity<Void> {
         service.sumStorageCount(storageDTO)
+        return ResponseEntity.ok().build()
     }
 
     @PostMapping("/subtract")
     @Transactional
-    fun subtractStorageCount(@RequestBody storageDTO: UpdateStorageDTO) {
+    fun subtractStorageCount(@RequestBody storageDTO: UpdateStorageDTO): ResponseEntity<Void> {
         service.subtractStorageCount(storageDTO)
+        return ResponseEntity.ok().build()
     }
 }
