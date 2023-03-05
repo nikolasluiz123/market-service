@@ -4,6 +4,7 @@ import br.com.market.service.dto.auth.AuthenticationRequestDTO
 import br.com.market.service.dto.auth.RegisterRequestDTO
 import br.com.market.service.response.AuthenticationResponse
 import br.com.market.service.service.AuthenticationService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

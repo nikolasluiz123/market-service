@@ -6,11 +6,15 @@ import br.com.market.service.models.User
 import br.com.market.service.repository.UserRepository
 import br.com.market.service.response.AuthenticationResponse
 import br.com.market.service.security.config.JWTService
+import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.lang.Exception
 
 @Service
 class AuthenticationService(
@@ -30,14 +34,24 @@ class AuthenticationService(
         userRepository.save(user)
         val token = jwtService.generateToken(user)
 
-        return AuthenticationResponse(token)
+        return AuthenticationResponse(token = token)
     }
 
     fun authenticate(authenticateRequest: AuthenticationRequestDTO): AuthenticationResponse? {
-        authenticationManager.authenticate(UsernamePasswordAuthenticationToken(authenticateRequest.email, authenticateRequest.password))
-        val user = userRepository.findByEmail(authenticateRequest.email).orElseThrow { UsernameNotFoundException("Usuário não encontrado") }
-        val token = jwtService.generateToken(user)
+        val token: String?
 
-        return AuthenticationResponse(token)
+        try {
+            authenticationManager.authenticate(UsernamePasswordAuthenticationToken(authenticateRequest.email, authenticateRequest.password))
+            val user = userRepository.findByEmail(authenticateRequest.email).orElseThrow { UsernameNotFoundException("Usuário não encontrado") }
+            token = jwtService.generateToken(user)
+        } catch (e: BadCredentialsException) {
+            return AuthenticationResponse(code = HttpStatus.BAD_REQUEST.value(), error = "As credenciais digitadas são inválidas, não foi possível realizar a autenticação.")
+        } catch (e: AuthenticationException) {
+            return AuthenticationResponse(code = HttpStatus.BAD_REQUEST.value(), error = "Ocorreu um erro na autenticação, verifique as credenciais digitadas e tente novamente. Se o erro persistir, contate o suporte.")
+        } catch (e: Exception) {
+            return AuthenticationResponse(code = HttpStatus.INTERNAL_SERVER_ERROR.value(), error = "Ocorreu um erro inesperado, porfavor, contate o suporte para obter maior apoio.")
+        }
+
+        return AuthenticationResponse(code = HttpStatus.OK.value(), token = token, success = true)
     }
 }
