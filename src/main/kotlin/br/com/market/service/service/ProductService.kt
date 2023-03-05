@@ -8,7 +8,12 @@ import br.com.market.service.models.ProductBrand
 import br.com.market.service.repository.brand.BrandRepository
 import br.com.market.service.repository.product.ProductBrandRepository
 import br.com.market.service.repository.product.ProductRepository
+import br.com.market.service.response.AuthenticationResponse
+import br.com.market.service.response.MarketServiceResponse
+import br.com.market.service.response.PersistenceResponse
 import jakarta.persistence.EntityNotFoundException
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,15 +27,18 @@ class ProductService(
         return productRepository.findAll().map(ProductViewMapper::toDTO)
     }
 
-    fun saveProduct(productDTO: NewProductDTO) {
-        val product = Product(name = productDTO.name)
-        val brands = productDTO.brands.map(BrandDTOMapper::toModel)
+    fun saveProduct(productDTO: NewProductDTO): PersistenceResponse {
+        return try {
+            val newProduct = Product(name = productDTO.name, imageUrl = productDTO.imageUrl)
+            val savedProduct = productRepository.save(newProduct)
 
-        productRepository.save(product)
-        brandRepository.saveAll(brands)
-
-        val productBrands = brands.map { ProductBrand(product = product, brand = it) }
-        productBrandRepository.saveAll(productBrands)
+            PersistenceResponse(idRemote = savedProduct.id, code = HttpStatus.OK.value(), success = true)
+        } catch (e: Exception) {
+            PersistenceResponse(
+                code = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                error = "Ocorreu um erro inesperado ao salvar o produto, se o erro persistir, contate o suporte."
+            )
+        }
     }
 
     fun updateProduct(productDTO: UpdateProductDTO) {

@@ -34,7 +34,7 @@ class AuthenticationService(
         userRepository.save(user)
         val token = jwtService.generateToken(user)
 
-        return AuthenticationResponse(token = token)
+        return AuthenticationResponse(code = HttpStatus.OK.value(), token = token, success = true)
     }
 
     fun authenticate(authenticateRequest: AuthenticationRequestDTO): AuthenticationResponse? {

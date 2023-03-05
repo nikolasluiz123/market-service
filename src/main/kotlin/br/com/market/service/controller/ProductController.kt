@@ -4,6 +4,8 @@ import br.com.market.service.dto.product.DeleteProductDTO
 import br.com.market.service.dto.product.NewProductDTO
 import br.com.market.service.dto.product.ProductView
 import br.com.market.service.dto.product.UpdateProductDTO
+import br.com.market.service.response.MarketServiceResponse
+import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -21,9 +23,8 @@ class ProductController(private val service: ProductService) {
 
     @PostMapping
     @Transactional(rollbackFor = [Exception::class])
-    fun saveProduct(@RequestBody @Valid productDTO: NewProductDTO): ResponseEntity<Void> {
-        service.saveProduct(productDTO)
-        return ResponseEntity.ok().build()
+    fun saveProduct(@RequestBody @Valid productDTO: NewProductDTO): ResponseEntity<PersistenceResponse> {
+        return ResponseEntity.ok(service.saveProduct(productDTO))
     }
 
     @PutMapping

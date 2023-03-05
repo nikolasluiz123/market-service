@@ -34,12 +34,16 @@ class JWTService {
         extraClaims: Map<String, Any>,
         userDetails: UserDetails
     ): String {
+        val actualDate = Calendar.getInstance()
+        val expirationToken = Calendar.getInstance()
+        expirationToken.add(Calendar.YEAR, 100)
+
         return Jwts
             .builder()
             .setClaims(extraClaims)
             .setSubject(userDetails.username)
-            .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis() + (1000 * 60 * 2)))
+            .setIssuedAt(actualDate.time)
+            .setExpiration(expirationToken.time)
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact()
     }
