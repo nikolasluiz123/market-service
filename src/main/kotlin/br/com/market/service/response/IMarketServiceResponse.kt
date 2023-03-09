@@ -1,6 +1,8 @@
 package br.com.market.service.response
 
-interface IMarketServiceResponse {
+import java.io.Serializable
+
+interface IMarketServiceResponse : Serializable {
     var code: Int
     var success: Boolean
     var error: String?

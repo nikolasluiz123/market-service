@@ -17,19 +17,20 @@ import org.springframework.web.bind.annotation.RestController
 class BrandController(private val service: BrandService) {
 
     @GetMapping("/{productId}")
+    @Transactional(timeout = 600)
     fun findProductBrands(@PathVariable productId: Long): List<BrandView> {
         return service.findProductBrands(productId)
     }
 
     @PostMapping("/add")
-    @Transactional
+    @Transactional(timeout = 600)
     fun sumStorageCount(@RequestBody storageDTO: UpdateStorageDTO): ResponseEntity<Void> {
         service.sumStorageCount(storageDTO)
         return ResponseEntity.ok().build()
     }
 
     @PostMapping("/subtract")
-    @Transactional
+    @Transactional(timeout = 600)
     fun subtractStorageCount(@RequestBody storageDTO: UpdateStorageDTO): ResponseEntity<Void> {
         service.subtractStorageCount(storageDTO)
         return ResponseEntity.ok().build()

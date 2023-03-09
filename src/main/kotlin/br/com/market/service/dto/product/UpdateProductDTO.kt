@@ -1,13 +1,11 @@
 package br.com.market.service.dto.product
 
-import br.com.market.service.dto.brand.UpdateBrandDTO
 import jakarta.validation.constraints.NotEmpty
 
 data class UpdateProductDTO(
     var id: Long,
+    var idLocal: Long,
     @field:NotEmpty(message = "O atributo name não pode ser vazio")
     var name: String,
-    var imageUrl: String = "",
-    @field:NotEmpty(message = "O atributo brands não pode ser vazio")
-    var brands: List<UpdateBrandDTO>
+    var imageUrl: String = ""
 )
