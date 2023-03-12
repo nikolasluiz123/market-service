@@ -9,5 +9,6 @@ import jakarta.persistence.Id
 data class Brand(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
+    var idLocal: Long? = null,
     var name: String = ""
 )

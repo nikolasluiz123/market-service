@@ -3,12 +3,14 @@ package br.com.market.service.repository.brand
 import br.com.market.service.dto.brand.BrandView
 import br.com.market.service.extensions.getResultList
 import br.com.market.service.extensions.setParameters
+import br.com.market.service.models.Brand
+import br.com.market.service.models.Product
 import br.com.market.service.models.ProductBrand
 import br.com.market.service.query.Parameter
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 import jakarta.persistence.Tuple
-import java.util.StringJoiner
+import java.util.*
 
 class BrandRepositoryImpl : CustomBrandRepository {
 
@@ -40,6 +42,28 @@ class BrandRepositoryImpl : CustomBrandRepository {
                 name = tuple.get("nomeProduto") as String,
                 count = tuple.get("estoque") as Int
             )
+        }
+    }
+
+    override fun findBrandByLocalId(localBrandId: Long): Optional<Brand> {
+        val params = mutableListOf<Parameter>()
+        val sql = StringJoiner("\n\t")
+
+        with(sql) {
+            add("select b")
+            add("from ${Brand::class.java.name} b")
+            add("where b.id = :pBrandId")
+        }
+
+        params.add(Parameter("pBrandId", localBrandId))
+
+        val query = entityManager.createQuery(sql.toString(), Brand::class.java)
+        query.setParameters(params)
+
+        return try {
+            Optional.of(query.singleResult)
+        } catch (e: Exception) {
+            Optional.empty<Brand>()
         }
     }
 
