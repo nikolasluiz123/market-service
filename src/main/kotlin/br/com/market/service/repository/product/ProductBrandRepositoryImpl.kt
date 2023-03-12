@@ -8,7 +8,6 @@ import br.com.market.service.query.Parameter
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import jakarta.persistence.PersistenceContext
-import org.springframework.dao.EmptyResultDataAccessException
 import java.util.StringJoiner
 
 class ProductBrandRepositoryImpl : CustomProductBrandRepository {
@@ -16,17 +15,17 @@ class ProductBrandRepositoryImpl : CustomProductBrandRepository {
     @PersistenceContext
     private lateinit var entityManager: EntityManager
 
-    override fun findByProductId(id: Long): List<ProductBrand> {
+    override fun findByLocalProductId(idLocal: Long): List<ProductBrand> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
         with(sql) {
             add("SELECT p")
             add("FROM ${ProductBrand::class.java.name} p ")
-            add("WHERE p.product.id = :pProductId")
+            add("WHERE p.product.idLocal = :pIdLocal")
         }
 
-        params.add(Parameter(name = "pProductId", value = id))
+        params.add(Parameter(name = "pIdLocal", value = idLocal))
 
         val query = entityManager.createQuery(sql.toString(), ProductBrand::class.java)
         query.setParameters(params)

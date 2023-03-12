@@ -5,7 +5,7 @@ import br.com.market.service.models.ProductBrand
 
 interface CustomProductBrandRepository {
 
-    fun findByProductId(id: Long): List<ProductBrand>
+    fun findByLocalProductId(idLocal: Long): List<ProductBrand>
 
     fun sumStorageCount(storageDTO: UpdateStorageDTO)
 

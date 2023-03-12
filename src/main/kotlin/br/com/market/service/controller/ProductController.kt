@@ -50,6 +50,20 @@ class ProductController(private val service: ProductService) {
         )
     }
 
+    @PostMapping("/delete")
+    @Transactional(rollbackFor = [Exception::class], timeout = 600)
+    fun deleteProduct(@RequestBody productDTO: DeleteProductDTO): ResponseEntity<MarketServiceResponse> {
+        service.deleteProduct(productDTO)
+        return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))
+    }
+
+    @PostMapping("/synchronize/delete")
+    @Transactional(rollbackFor = [Exception::class], timeout = 600)
+    fun deleteProducts(@RequestBody productDTOs: List<DeleteProductDTO>): ResponseEntity<MarketServiceResponse> {
+        service.deleteProducts(productDTOs)
+        return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))
+    }
+
     @PostMapping("/synchronize")
     @Transactional(rollbackFor = [Exception::class], timeout = 600)
     fun syncProducts(@RequestBody @Valid productDTOs: List<NewProductDTO>): ResponseEntity<MarketServiceResponse> {
@@ -57,10 +71,4 @@ class ProductController(private val service: ProductService) {
         return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
-    @DeleteMapping
-    @Transactional(rollbackFor = [Exception::class], timeout = 600)
-    fun deleteProduct(@RequestBody productDTO: DeleteProductDTO): ResponseEntity<Void> {
-        service.deleteProduct(productDTO)
-        return ResponseEntity.ok().build()
-    }
 }

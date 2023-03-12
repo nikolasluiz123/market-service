@@ -67,7 +67,7 @@ class ProductService(
     }
 
     fun deleteProduct(productDTO: DeleteProductDTO) {
-        val productBrandList = productBrandRepository.findByProductId(productDTO.id)
+        val productBrandList = productBrandRepository.findByLocalProductId(productDTO.idLocal)
 
         val brandIds = productBrandList.map { productBrand ->
             val brandId = productBrand.brand.id
@@ -77,6 +77,14 @@ class ProductService(
 
         brandIds.forEach { brandRepository.deleteById(it!!) }
 
-        productRepository.deleteById(productDTO.id)
+        val product = productRepository.findProductByLocalId(productDTO.idLocal)
+
+        if (product.isPresent) {
+            productRepository.deleteById(product.get().id!!)
+        }
+    }
+
+    fun deleteProducts(productDTOs: List<DeleteProductDTO>) {
+        productDTOs.forEach(::deleteProduct)
     }
 }
