@@ -24,20 +24,20 @@ class ProductService(
     }
 
     fun saveProduct(productDTO: NewProductDTO): Product {
-        val newProduct = Product(idLocal = productDTO.idLocal, name = productDTO.name, imageUrl = productDTO.imageUrl)
+        val newProduct = Product(idLocal = productDTO.localProductId, name = productDTO.name, imageUrl = productDTO.imageUrl)
         return productRepository.save(newProduct)
     }
 
     fun syncProducts(productDTOs: List<NewProductDTO>) {
         productDTOs.forEach { productDTO ->
-            val productOptional = productRepository.findProductByLocalId(productDTO.idLocal!!)
+            val productOptional = productRepository.findProductByLocalId(productDTO.localProductId!!)
 
             if (productOptional.isPresent) {
                 val product = productOptional.get()
 
                 updateProduct(UpdateProductDTO(
                     id = product.id!!,
-                    idLocal = productDTO.idLocal!!,
+                    localProductId = productDTO.localProductId!!,
                     name = productDTO.name,
                     imageUrl = productDTO.imageUrl
                 ))
@@ -48,7 +48,7 @@ class ProductService(
     }
 
     fun updateProduct(productDTO: UpdateProductDTO): Product {
-        val product = productRepository.findProductByLocalId(productDTO.idLocal).orElseThrow {
+        val product = productRepository.findProductByLocalId(productDTO.localProductId).orElseThrow {
             EntityNotFoundException("Não foi possível encontrar o produto com o identificador especificado.")
         }
 
@@ -56,18 +56,10 @@ class ProductService(
         product.imageUrl = productDTO.imageUrl
 
         return product
-
-//        productDTO.brands.forEach {
-//            val brand = brandRepository.findById(it.id).orElseThrow {
-//                EntityNotFoundException("Não foi possível encontrar a marca com o identificador especificado.")
-//            }
-//
-//            brand.name = it.name
-//        }
     }
 
     fun deleteProduct(productDTO: DeleteProductDTO) {
-        val productBrandList = productBrandRepository.findByLocalProductId(productDTO.idLocal)
+        val productBrandList = productBrandRepository.findByLocalProductId(productDTO.localProductId)
 
         val brandIds = productBrandList.map { productBrand ->
             val brandId = productBrand.brand.id
@@ -77,7 +69,7 @@ class ProductService(
 
         brandIds.forEach { brandRepository.deleteById(it!!) }
 
-        val product = productRepository.findProductByLocalId(productDTO.idLocal)
+        val product = productRepository.findProductByLocalId(productDTO.localProductId)
 
         if (product.isPresent) {
             productRepository.deleteById(product.get().id!!)

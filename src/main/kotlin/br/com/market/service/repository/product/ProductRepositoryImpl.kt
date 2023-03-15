@@ -13,7 +13,7 @@ class ProductRepositoryImpl : CustomProductRepository {
     @PersistenceContext
     private lateinit var entityManager: EntityManager
 
-    override fun findProductByLocalId(localId: Long): Optional<Product> {
+    override fun findProductByLocalId(localId: UUID): Optional<Product> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 

@@ -5,6 +5,6 @@ import java.util.*
 
 interface CustomProductRepository {
 
-    fun findProductByLocalId(localId: Long): Optional<Product>
+    fun findProductByLocalId(localId: UUID): Optional<Product>
 
 }

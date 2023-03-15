@@ -1,11 +1,10 @@
 package br.com.market.service.dto.product
 
-import jakarta.validation.constraints.NotEmpty
+import java.util.*
 
 data class UpdateProductDTO(
     var id: Long,
-    var idLocal: Long,
-    @field:NotEmpty(message = "O atributo name não pode ser vazio")
+    var localProductId: UUID,
     var name: String,
     var imageUrl: String = ""
 )

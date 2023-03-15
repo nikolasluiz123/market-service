@@ -17,7 +17,7 @@ class BrandRepositoryImpl : CustomBrandRepository {
     @PersistenceContext
     private lateinit var entityManager: EntityManager
 
-    override fun findProductBrands(productId: Long): List<BrandView> {
+    override fun findProductBrands(productId: UUID): List<BrandView> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
@@ -45,14 +45,14 @@ class BrandRepositoryImpl : CustomBrandRepository {
         }
     }
 
-    override fun findBrandByLocalId(localBrandId: Long): Optional<Brand> {
+    override fun findBrandByLocalId(localBrandId: UUID): Optional<Brand> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
         with(sql) {
             add("select b")
             add("from ${Brand::class.java.name} b")
-            add("where b.id = :pBrandId")
+            add("where b.idLocal = :pBrandId")
         }
 
         params.add(Parameter("pBrandId", localBrandId))
