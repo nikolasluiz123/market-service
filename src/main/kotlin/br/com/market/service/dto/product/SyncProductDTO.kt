@@ -1,7 +1,9 @@
 package br.com.market.service.dto.product
 
-data class ProductView(
-    var id: Long?,
+import java.util.*
+
+data class SyncProductDTO(
+    var localProductId: UUID,
     var name: String,
     var imageUrl: String
 )

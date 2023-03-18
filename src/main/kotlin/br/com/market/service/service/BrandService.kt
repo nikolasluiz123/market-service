@@ -1,9 +1,6 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.brand.DeleteBrandDTO
-import br.com.market.service.dto.brand.NewBrandDTO
-import br.com.market.service.dto.brand.UpdateBrandDTO
-import br.com.market.service.dto.product.UpdateProductDTO
+import br.com.market.service.dto.brand.*
 import br.com.market.service.models.Brand
 import br.com.market.service.models.ProductBrand
 import br.com.market.service.repository.brand.BrandRepository
@@ -18,14 +15,31 @@ class BrandService(
     private val productBrandRepository: ProductBrandRepository
 ) {
 
+    fun findAllBrands(): List<SyncBrandDTO> {
+        return brandRepository.findAll().map {
+            SyncBrandDTO(it.idLocal!!, it.name)
+        }
+    }
+
+    fun findAllProductBrands(): List<SyncProductBrandDTO> {
+        return productBrandRepository.findAll().map {
+            SyncProductBrandDTO(it.idLocal!!, it.product.idLocal!!, it.brand.idLocal!!, it.count)
+        }
+    }
+
     fun saveBrand(newBrandDTO: NewBrandDTO): Brand? {
-        val product = productRepository.findProductByLocalId(newBrandDTO.localProductId!!)
+        val product = productRepository.findProductByLocalId(newBrandDTO.localProductId)
 
         if (product.isPresent) {
             var brand = Brand(name = newBrandDTO.name, idLocal = newBrandDTO.localBrandId)
             brand = brandRepository.save(brand)
 
-            val productBrand = ProductBrand(product = product.get(), brand = brand, count = newBrandDTO.count)
+            val productBrand = ProductBrand(
+                idLocal = newBrandDTO.localProductBrandId,
+                product = product.get(),
+                brand = brand,
+                count = newBrandDTO.count
+            )
 
             productBrandRepository.save(productBrand)
 
@@ -69,7 +83,7 @@ class BrandService(
 
     fun syncBrands(brandsDTO: List<NewBrandDTO>) {
         brandsDTO.forEach { brandDTO ->
-            val brandOptional = brandRepository.findBrandByLocalId(brandDTO.localBrandId!!)
+            val brandOptional = brandRepository.findBrandByLocalId(brandDTO.localBrandId)
 
             if (brandOptional.isPresent) {
                 val brand = brandOptional.get()
@@ -86,16 +100,4 @@ class BrandService(
             }
         }
     }
-
-//    fun findProductBrands(productId: Long): List<BrandView> {
-//        return brandRepository.findProductBrands(productId)
-//    }
-//
-//    fun sumStorageCount(storageDTO: UpdateStorageDTO) {
-//        productBrandRepository.sumStorageCount(storageDTO)
-//    }
-//
-//    fun subtractStorageCount(storageDTO: UpdateStorageDTO) {
-//        productBrandRepository.subtractStorageCount(storageDTO)
-//    }
 }

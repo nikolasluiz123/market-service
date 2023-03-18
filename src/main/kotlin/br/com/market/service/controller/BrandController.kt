@@ -1,17 +1,17 @@
 package br.com.market.service.controller
 
-import br.com.market.service.dto.brand.DeleteBrandDTO
-import br.com.market.service.dto.brand.NewBrandDTO
-import br.com.market.service.dto.brand.UpdateBrandDTO
+import br.com.market.service.dto.brand.*
 import br.com.market.service.dto.product.DeleteProductDTO
 import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.PersistenceResponse
+import br.com.market.service.response.ReadResponse
 import br.com.market.service.service.BrandService
 import jakarta.validation.Valid
 import org.hibernate.sql.Delete
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -21,6 +21,20 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/brand")
 class BrandController(private val service: BrandService) {
+
+    @GetMapping
+    @Transactional(timeout = 600)
+    fun findAllBrands(): ResponseEntity<ReadResponse<SyncBrandDTO>> {
+        val values = service.findAllBrands()
+        return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
+    }
+
+    @GetMapping("/productBrands")
+    @Transactional(timeout = 600)
+    fun findAllProductBrands(): ResponseEntity<ReadResponse<SyncProductBrandDTO>> {
+        val values = service.findAllProductBrands()
+        return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
+    }
 
     @PostMapping
     @Transactional(timeout = 600)

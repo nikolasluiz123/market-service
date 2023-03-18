@@ -2,9 +2,8 @@ package br.com.market.service.service
 
 import br.com.market.service.dto.product.DeleteProductDTO
 import br.com.market.service.dto.product.NewProductDTO
-import br.com.market.service.dto.product.ProductView
+import br.com.market.service.dto.product.SyncProductDTO
 import br.com.market.service.dto.product.UpdateProductDTO
-import br.com.market.service.mappers.ProductViewMapper
 import br.com.market.service.models.Product
 import br.com.market.service.repository.brand.BrandRepository
 import br.com.market.service.repository.product.ProductBrandRepository
@@ -19,8 +18,10 @@ class ProductService(
     private val productBrandRepository: ProductBrandRepository
 ) {
 
-    fun findAllProducts(): List<ProductView> {
-        return productRepository.findAll().map(ProductViewMapper::toDTO)
+    fun findAllProducts(): List<SyncProductDTO> {
+        return productRepository.findAll().map {
+            SyncProductDTO(it.idLocal!!, it.name, it.imageUrl)
+        }
     }
 
     fun saveProduct(productDTO: NewProductDTO): Product {
@@ -30,14 +31,14 @@ class ProductService(
 
     fun syncProducts(productDTOs: List<NewProductDTO>) {
         productDTOs.forEach { productDTO ->
-            val productOptional = productRepository.findProductByLocalId(productDTO.localProductId!!)
+            val productOptional = productRepository.findProductByLocalId(productDTO.localProductId)
 
             if (productOptional.isPresent) {
                 val product = productOptional.get()
 
                 updateProduct(UpdateProductDTO(
                     id = product.id!!,
-                    localProductId = productDTO.localProductId!!,
+                    localProductId = productDTO.localProductId,
                     name = productDTO.name,
                     imageUrl = productDTO.imageUrl
                 ))

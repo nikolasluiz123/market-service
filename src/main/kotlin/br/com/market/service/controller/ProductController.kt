@@ -2,10 +2,11 @@ package br.com.market.service.controller
 
 import br.com.market.service.dto.product.DeleteProductDTO
 import br.com.market.service.dto.product.NewProductDTO
-import br.com.market.service.dto.product.ProductView
+import br.com.market.service.dto.product.SyncProductDTO
 import br.com.market.service.dto.product.UpdateProductDTO
 import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.PersistenceResponse
+import br.com.market.service.response.ReadResponse
 import br.com.market.service.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -18,8 +19,16 @@ import org.springframework.web.bind.annotation.*
 class ProductController(private val service: ProductService) {
 
     @GetMapping
-    fun findAllProducts(): List<ProductView> {
-        return service.findAllProducts()
+    @Transactional(timeout = 600)
+    fun findAllProducts(): ResponseEntity<ReadResponse<SyncProductDTO>> {
+        val values = service.findAllProducts()
+        return ResponseEntity.ok(
+            ReadResponse(
+                values = values,
+                code = HttpStatus.OK.value(),
+                success = true
+            )
+        )
     }
 
     @PostMapping
