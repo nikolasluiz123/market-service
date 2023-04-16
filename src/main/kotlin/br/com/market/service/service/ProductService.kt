@@ -4,7 +4,7 @@ import br.com.market.service.dto.product.DeleteProductDTO
 import br.com.market.service.dto.product.NewProductDTO
 import br.com.market.service.dto.product.SyncProductDTO
 import br.com.market.service.dto.product.UpdateProductDTO
-import br.com.market.service.models.Product
+import br.com.market.service.models.Product2
 import br.com.market.service.repository.brand.BrandRepository
 import br.com.market.service.repository.product.ProductBrandRepository
 import br.com.market.service.repository.product.ProductRepository
@@ -24,9 +24,9 @@ class ProductService(
         }
     }
 
-    fun saveProduct(productDTO: NewProductDTO): Product {
-        val newProduct = Product(idLocal = productDTO.localProductId, name = productDTO.name, imageUrl = productDTO.imageUrl)
-        return productRepository.save(newProduct)
+    fun saveProduct(productDTO: NewProductDTO): Product2 {
+        val newProduct2 = Product2(idLocal = productDTO.localProductId, name = productDTO.name, imageUrl = productDTO.imageUrl)
+        return productRepository.save(newProduct2)
     }
 
     fun syncProducts(productDTOs: List<NewProductDTO>) {
@@ -48,7 +48,7 @@ class ProductService(
         }
     }
 
-    fun updateProduct(productDTO: UpdateProductDTO): Product {
+    fun updateProduct(productDTO: UpdateProductDTO): Product2 {
         val product = productRepository.findProductByLocalId(productDTO.localProductId).orElseThrow {
             EntityNotFoundException("Não foi possível encontrar o produto com o identificador especificado.")
         }
@@ -63,7 +63,7 @@ class ProductService(
         val productBrandList = productBrandRepository.findByLocalProductId(productDTO.localProductId)
 
         val brandIds = productBrandList.map { productBrand ->
-            val brandId = productBrand.brand.id
+            val brandId = productBrand.brand2.id
             productBrandRepository.deleteById(productBrand.id!!)
             brandId
         }

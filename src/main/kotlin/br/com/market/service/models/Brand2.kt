@@ -6,11 +6,10 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import java.util.*
 
-@Entity(name = "products")
-data class Product(
+@Entity(name = "brands")
+data class Brand2(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     var idLocal: UUID? = null,
-    var name: String = "",
-    var imageUrl: String = ""
+    var name: String = ""
 )

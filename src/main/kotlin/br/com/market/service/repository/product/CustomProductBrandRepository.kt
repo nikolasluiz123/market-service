@@ -1,13 +1,13 @@
 package br.com.market.service.repository.product
 
-import br.com.market.service.models.ProductBrand
+import br.com.market.service.models.ProductBrand2
 import java.util.*
 
 interface CustomProductBrandRepository {
 
-    fun findByLocalProductId(localProductId: UUID): List<ProductBrand>
+    fun findByLocalProductId(localProductId: UUID): List<ProductBrand2>
 
-    fun findByLocalBrandId(localBrandId: UUID): Optional<ProductBrand>
+    fun findByLocalBrandId(localBrandId: UUID): Optional<ProductBrand2>
 
 //    fun sumStorageCount(storageDTO: UpdateStorageDTO)
 //
