@@ -11,14 +11,23 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 @RestController
 @RequestMapping("/api/v1/category")
-class CategoryController(private val categoryService: CategoryService) {
+class CategoryController(private val service: CategoryService) {
 
     @PostMapping
     @Transactional(timeout = 600)
     fun save(@RequestBody @Valid categoryDTO: CategoryDTO): ResponseEntity<PersistenceResponse> {
+        service.save(categoryDTO)
+        return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
+    }
+
+    @PostMapping("/toggleActive")
+    @Transactional(timeout = 600)
+    fun toggleActive(@RequestBody @Valid categoryDTO: CategoryDTO): ResponseEntity<PersistenceResponse> {
+        service.toggleActive(categoryDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 }

@@ -4,6 +4,7 @@ import java.util.*
 
 data class CategoryDTO(
     var localCategoryId: UUID,
-    var name: String,
-    var companyId: Long
+    var name: String? = null,
+    var companyId: Long? = null,
+    var active: Boolean = true
 )
