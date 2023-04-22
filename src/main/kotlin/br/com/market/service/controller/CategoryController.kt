@@ -1,16 +1,15 @@
 package br.com.market.service.controller
 
 import br.com.market.service.dto.category.CategoryDTO
+import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.PersistenceResponse
+import br.com.market.service.response.ReadResponse
 import br.com.market.service.service.CategoryService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
@@ -29,5 +28,19 @@ class CategoryController(private val service: CategoryService) {
     fun toggleActive(@RequestBody @Valid categoryDTO: CategoryDTO): ResponseEntity<PersistenceResponse> {
         service.toggleActive(categoryDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
+    }
+
+    @PostMapping("/sync")
+    @Transactional(timeout = 6000)
+    fun sync(@RequestBody @Valid categoriesDTOs: List<CategoryDTO>): ResponseEntity<MarketServiceResponse> {
+        service.sync(categoriesDTOs)
+        return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))
+    }
+
+    @GetMapping
+    @Transactional(timeout = 600)
+    fun findAll(): ResponseEntity<ReadResponse<CategoryDTO>> {
+        val values = service.findAll()
+        return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }

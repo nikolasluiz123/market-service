@@ -9,8 +9,15 @@ import org.springframework.stereotype.Service
 class CategoryService(private val repository: ICategoryRepository) {
 
     fun save(dto: CategoryDTO) {
-        val category = repository.findCategoryByLocalId(dto.localCategoryId)?.copy(name = dto.name)
-            ?: Category(name = dto.name, localId = dto.localCategoryId)
+        val category = repository.findCategoryByLocalId(dto.localCategoryId)?.copy(
+            name = dto.name,
+            localId = dto.localCategoryId,
+            active = dto.active
+        ) ?: Category(
+            name = dto.name,
+            localId = dto.localCategoryId,
+            active = dto.active
+        )
 
         repository.save(category)
     }
@@ -18,6 +25,21 @@ class CategoryService(private val repository: ICategoryRepository) {
     fun toggleActive(categoryDTO: CategoryDTO) {
         repository.findCategoryByLocalId(categoryDTO.localCategoryId)?.let {
             repository.save(it.copy(active = !it.active))
+        }
+    }
+
+    fun sync(categoriesDTOs: List<CategoryDTO>) {
+        categoriesDTOs.forEach(::save)
+    }
+
+    fun findAll(): List<CategoryDTO> {
+        return repository.findAll().map {
+            CategoryDTO(
+                localCategoryId = it.localId!!,
+                name = it.name,
+                companyId = it.company?.id,
+                active = it.active
+            )
         }
     }
 }
