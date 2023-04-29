@@ -1,36 +1,37 @@
 package br.com.market.service.repository.brand
 
 import br.com.market.service.extensions.setParameters
-import br.com.market.service.models.Brand2
+import br.com.market.service.models.Brand
 import br.com.market.service.query.Parameter
 import jakarta.persistence.EntityManager
+import jakarta.persistence.NoResultException
 import jakarta.persistence.PersistenceContext
 import java.util.*
 
-class BrandRepositoryImpl : CustomBrandRepository {
+class BrandRepositoryImpl : ICustomBrandRepository {
 
     @PersistenceContext
     private lateinit var entityManager: EntityManager
 
-    override fun findBrandByLocalId(localBrandId: UUID): Optional<Brand2> {
+    override fun findBrandByLocalId(localId: UUID): Brand? {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
         with(sql) {
-            add("select b")
-            add("from ${Brand2::class.java.name} b")
-            add("where b.idLocal = :pBrandId")
+            add("SELECT c")
+            add("FROM ${Brand::class.java.name} c ")
+            add("WHERE c.idLocal = :pIdLocal")
         }
 
-        params.add(Parameter("pBrandId", localBrandId))
+        params.add(Parameter(name = "pIdLocal", value = localId))
 
-        val query = entityManager.createQuery(sql.toString(), Brand2::class.java)
+        val query = entityManager.createQuery(sql.toString(), Brand::class.java)
         query.setParameters(params)
 
         return try {
-            Optional.of(query.singleResult)
-        } catch (e: Exception) {
-            Optional.empty<Brand2>()
+            query.singleResult
+        } catch (e: NoResultException) {
+            return null
         }
     }
 
