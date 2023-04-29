@@ -44,9 +44,9 @@ class BrandService(
         }
     }
 
-    fun toggleActive(categoryDTO: BrandDTO) {
-        brandRepository.findBrandByLocalId(categoryDTO.localId)?.let {
-            brandRepository.save(it.copy(active = !it.active))
+    fun toggleActive(categoryBrandDTO: CategoryBrandDTO) {
+        categoryBrandRepository.findCategoryBrandByLocalId(categoryBrandDTO.localId)?.let {
+            categoryBrandRepository.save(it.copy(active = !it.active))
         }
     }
 

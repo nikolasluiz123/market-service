@@ -24,7 +24,7 @@ class BrandController(private val service: BrandService) {
 
     @PostMapping("/toggleActive")
     @Transactional(timeout = 600)
-    fun toggleActive(@RequestBody @Valid brandDTO: BrandDTO): ResponseEntity<PersistenceResponse> {
+    fun toggleActive(@RequestBody @Valid brandDTO: CategoryBrandDTO): ResponseEntity<PersistenceResponse> {
         service.toggleActive(brandDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
