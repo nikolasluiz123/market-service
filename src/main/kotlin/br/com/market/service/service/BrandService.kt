@@ -1,44 +1,78 @@
 package br.com.market.service.service
 
+import br.com.market.service.dto.brand.BrandBodyDTO
 import br.com.market.service.dto.brand.BrandDTO
+import br.com.market.service.dto.brand.CategoryBrandDTO
 import br.com.market.service.models.Brand
+import br.com.market.service.models.CategoryBrand
 import br.com.market.service.repository.brand.IBrandRepository
+import br.com.market.service.repository.brand.ICategoryBrandRepository
+import br.com.market.service.repository.category.ICategoryRepository
 import org.springframework.stereotype.Service
 
 @Service
-class BrandService(private val repository: IBrandRepository) {
+class BrandService(
+    private val brandRepository: IBrandRepository,
+    private val categoryRepository: ICategoryRepository,
+    private val categoryBrandRepository: ICategoryBrandRepository
+    ) {
     
-    fun save(dto: BrandDTO) {
-        val brand = repository.findBrandByLocalId(dto.localBrandId)?.copy(
-            name = dto.name,
-            localId = dto.localBrandId,
-            active = dto.active
-        ) ?: Brand(
-            name = dto.name,
-            localId = dto.localBrandId,
-            active = dto.active
-        )
+    fun save(brandBodyDTO: BrandBodyDTO) {
+        with(brandBodyDTO.brand) {
+            val brand = brandRepository.findBrandByLocalId(localId)?.copy(
+                name = name,
+                localId = localId,
+                active = active
+            ) ?: Brand(
+                name = name,
+                localId = localId,
+                active = active
+            )
 
-        repository.save(brand)
-    }
+            brandRepository.save(brand)
 
-    fun toggleActive(categoryDTO: BrandDTO) {
-        repository.findBrandByLocalId(categoryDTO.localBrandId)?.let {
-            repository.save(it.copy(active = !it.active))
+            with(brandBodyDTO.categoryBrand) {
+                val categoryBrand = CategoryBrand(
+                    localId = localId,
+                    category = categoryRepository.findCategoryByLocalId(localCategoryId),
+                    brand = brand,
+                    active = active
+                )
+
+                categoryBrandRepository.save(categoryBrand)
+            }
         }
     }
 
-    fun sync(categoriesDTOs: List<BrandDTO>) {
-        categoriesDTOs.forEach(::save)
+    fun toggleActive(categoryDTO: BrandDTO) {
+        brandRepository.findBrandByLocalId(categoryDTO.localId)?.let {
+            brandRepository.save(it.copy(active = !it.active))
+        }
     }
 
-    fun findAll(): List<BrandDTO> {
-        return repository.findAll().map {
+    fun sync(brandBodyDTOs: List<BrandBodyDTO>) {
+        brandBodyDTOs.forEach(::save)
+    }
+
+    fun findAllBrandDTOs(): List<BrandDTO> {
+        return brandRepository.findAll().map {
             BrandDTO(
-                localBrandId = it.localId!!,
+                localId = it.localId!!,
                 name = it.name,
                 companyId = it.company?.id,
                 active = it.active
+            )
+        }
+    }
+
+    fun findAllCategoryBrandDTOs(): List<CategoryBrandDTO> {
+        return categoryBrandRepository.findAll().map {
+            CategoryBrandDTO(
+                localId = it.localId!!,
+                companyId = it.company?.id,
+                active = it.active,
+                localCategoryId = it.category?.localId!!,
+                localBrandId = it.brand?.localId!!
             )
         }
     }

@@ -17,30 +17,36 @@ class BrandController(private val service: BrandService) {
 
     @PostMapping
     @Transactional(timeout = 600)
-    fun save(@RequestBody @Valid categoryDTO: BrandDTO): ResponseEntity<PersistenceResponse> {
-        service.save(categoryDTO)
+    fun save(@RequestBody @Valid brandBodyDTO: BrandBodyDTO): ResponseEntity<PersistenceResponse> {
+        service.save(brandBodyDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping("/toggleActive")
     @Transactional(timeout = 600)
-    fun toggleActive(@RequestBody @Valid categoryDTO: BrandDTO): ResponseEntity<PersistenceResponse> {
-        service.toggleActive(categoryDTO)
+    fun toggleActive(@RequestBody @Valid brandDTO: BrandDTO): ResponseEntity<PersistenceResponse> {
+        service.toggleActive(brandDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping("/sync")
     @Transactional(timeout = 6000)
-    fun sync(@RequestBody @Valid categoriesDTOs: List<BrandDTO>): ResponseEntity<MarketServiceResponse> {
-        service.sync(categoriesDTOs)
+    fun sync(@RequestBody @Valid brandBodyDTOs: List<BrandBodyDTO>): ResponseEntity<MarketServiceResponse> {
+        service.sync(brandBodyDTOs)
         return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @GetMapping
     @Transactional(timeout = 600)
-    fun findAll(): ResponseEntity<ReadResponse<BrandDTO>> {
-        val values = service.findAll()
+    fun findAllBrandDTOs(): ResponseEntity<ReadResponse<BrandDTO>> {
+        val values = service.findAllBrandDTOs()
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 
+    @GetMapping("/categoryBrand")
+    @Transactional(timeout = 600)
+    fun findAllCategoryBrandDTOs(): ResponseEntity<ReadResponse<CategoryBrandDTO>> {
+        val values = service.findAllCategoryBrandDTOs()
+        return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
+    }
 }
