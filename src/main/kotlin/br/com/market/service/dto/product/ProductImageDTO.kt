@@ -1,0 +1,29 @@
+package br.com.market.service.dto.product
+
+import br.com.market.service.dto.base.MobileDTO
+import java.util.*
+
+data class ProductImageDTO(
+    override var localId: UUID,
+    override var active: Boolean = true,
+    override var id: Long? = null,
+    var bytes: ByteArray? = null,
+    var imageUrl: String? = null,
+    var productLocalId: UUID? = null
+) : MobileDTO() {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ProductImageDTO
+
+        if (localId != other.localId) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return localId.hashCode()
+    }
+}
