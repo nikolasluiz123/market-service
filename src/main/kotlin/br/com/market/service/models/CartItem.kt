@@ -12,7 +12,7 @@ data class CartItem(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company? = null,
     @Column(name = "local_id")
-    override var localId: UUID? = null,
+    override var localId: String? = null,
     var quantity: Int = 0,
     @ManyToOne @JoinColumn(name = "product_id")
     var product: Product? = null,

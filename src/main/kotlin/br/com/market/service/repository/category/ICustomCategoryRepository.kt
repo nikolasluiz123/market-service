@@ -5,6 +5,6 @@ import java.util.*
 
 interface ICustomCategoryRepository {
 
-    fun findCategoryByLocalId(localId: UUID): Category?
+    fun findCategoryByLocalId(localId: String): Category?
 
 }

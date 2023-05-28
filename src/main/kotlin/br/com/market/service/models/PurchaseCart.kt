@@ -14,7 +14,7 @@ data class PurchaseCart(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company? = null,
     @Column(name = "local_id")
-    override var localId: UUID? = null,
+    override var localId: String? = null,
     var date: LocalDateTime = LocalDateTime.now(),
     @Column(name = "payment_type")
     var paymentType: EnumPaymentType? = null,

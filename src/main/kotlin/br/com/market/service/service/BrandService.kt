@@ -7,19 +7,23 @@ import br.com.market.service.models.Brand
 import br.com.market.service.models.CategoryBrand
 import br.com.market.service.repository.brand.IBrandRepository
 import br.com.market.service.repository.brand.ICategoryBrandRepository
-import br.com.market.service.repository.category.ICategoryRepository
+import br.com.market.service.repository.brand.ICustomBrandRepository
+import br.com.market.service.repository.brand.ICustomCategoryBrandRepository
+import br.com.market.service.repository.category.ICustomCategoryRepository
 import org.springframework.stereotype.Service
 
 @Service
 class BrandService(
     private val brandRepository: IBrandRepository,
-    private val categoryRepository: ICategoryRepository,
-    private val categoryBrandRepository: ICategoryBrandRepository
+    private val customBrandRepository: ICustomBrandRepository,
+    private val customCategoryRepository: ICustomCategoryRepository,
+    private val categoryBrandRepository: ICategoryBrandRepository,
+    private val customCategoryBrandRepository: ICustomCategoryBrandRepository
     ) {
     
     fun save(brandBodyDTO: BrandBodyDTO) {
         with(brandBodyDTO.brand) {
-            val brand = brandRepository.findBrandByLocalId(localId)?.copy(
+            val brand = customBrandRepository.findBrandByLocalId(localId)?.copy(
                 name = name,
                 localId = localId,
                 active = active
@@ -34,7 +38,7 @@ class BrandService(
             with(brandBodyDTO.categoryBrand) {
                 val categoryBrand = CategoryBrand(
                     localId = localId,
-                    category = categoryRepository.findCategoryByLocalId(localCategoryId),
+                    category = customCategoryRepository.findCategoryByLocalId(localCategoryId),
                     brand = brand,
                     active = active
                 )
@@ -45,7 +49,7 @@ class BrandService(
     }
 
     fun toggleActive(categoryBrandDTO: CategoryBrandDTO) {
-        categoryBrandRepository.findCategoryBrandByLocalId(categoryBrandDTO.localId)?.let {
+        customCategoryBrandRepository.findCategoryBrandByLocalId(categoryBrandDTO.localId)?.let {
             categoryBrandRepository.save(it.copy(active = !it.active))
         }
     }

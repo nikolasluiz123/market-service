@@ -5,5 +5,5 @@ import java.util.*
 
 interface ICustomCategoryBrandRepository {
 
-    fun findCategoryBrandByLocalId(localId: UUID): CategoryBrand?
+    fun findCategoryBrandByLocalId(localId: String): CategoryBrand?
 }

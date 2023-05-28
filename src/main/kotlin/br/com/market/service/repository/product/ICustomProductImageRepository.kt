@@ -1,11 +1,14 @@
 package br.com.market.service.repository.product
 
 import br.com.market.service.models.ProductImage
-import java.util.*
 
 interface ICustomProductImageRepository {
 
-    fun findProductImageByLocalId(localId: UUID): ProductImage?
+    fun findProductImageByLocalId(localId: String): ProductImage?
 
-    fun deleteProductImagesByProductLocalId(localProductId: UUID)
+    fun findProductImagesByProductId(productId: Long): List<ProductImage>
+
+    fun toggleActiveProductImagesByProductLocalId(localProductId: String, active: Boolean)
+
+    fun updateProductImagePrincipal(productId: Long, id: Long)
 }

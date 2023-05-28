@@ -12,9 +12,9 @@ data class DeliveryManQueue(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company? = null,
     @Column(name = "local_id")
-    override var localId: UUID? = null,
+    override var localId: String? = null,
     @Column(name = "delivery_started")
     var deliveryStarted: Boolean = false,
-    @OneToOne @PrimaryKeyJoinColumn(name = "purchase_cart_id")
+    @OneToOne @JoinColumn(name = "purchase_cart_id")
     var purchaseCart: PurchaseCart? = null
 ): MobileCompanyModel()

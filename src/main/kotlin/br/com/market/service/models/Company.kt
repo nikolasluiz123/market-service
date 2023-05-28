@@ -9,6 +9,6 @@ data class Company(
     override var id: Long? = null,
     override var active: Boolean = true,
     var name: String = "",
-    @OneToOne @PrimaryKeyJoinColumn(name = "theme_definitions_id")
+    @OneToOne @JoinColumn(name = "theme_definitions_id")
     var themeDefinitions: ThemeDefinitions? = null
 ): BaseModel()

@@ -6,24 +6,26 @@ import br.com.market.service.query.Parameter
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import jakarta.persistence.PersistenceContext
+import org.springframework.stereotype.Repository
 import java.util.*
 
-class CategoryRepositoryImpl: ICustomCategoryRepository{
+@Repository
+class CustomCategoryRepositoryImpl: ICustomCategoryRepository{
 
     @PersistenceContext
     private lateinit var entityManager: EntityManager
 
-    override fun findCategoryByLocalId(localId: UUID): Category? {
+    override fun findCategoryByLocalId(localId: String): Category? {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
         with(sql) {
             add("SELECT c")
             add("FROM ${Category::class.java.name} c ")
-            add("WHERE c.idLocal = :pIdLocal")
+            add("WHERE c.localId = :pLocalId")
         }
 
-        params.add(Parameter(name = "pIdLocal", value = localId))
+        params.add(Parameter(name = "pLocalId", value = localId))
 
         val query = entityManager.createQuery(sql.toString(), Category::class.java)
         query.setParameters(params)

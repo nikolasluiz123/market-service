@@ -2,7 +2,6 @@ package br.com.market.service.models
 
 import br.com.market.service.models.base.MobileCompanyModel
 import jakarta.persistence.*
-import java.util.*
 
 @Entity(name = "products_images")
 data class ProductImage(
@@ -12,11 +11,12 @@ data class ProductImage(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company? = null,
     @Column(name = "local_id")
-    override var localId: UUID? = null,
+    override var localId: String? = null,
     var bytes: ByteArray? = null,
     var imageUrl: String? = null,
     @ManyToOne @JoinColumn(name = "product_id")
-    var product: Product? = null
+    var product: Product? = null,
+    var principal: Boolean? = false
 ) : MobileCompanyModel() {
 
     override fun equals(other: Any?): Boolean {

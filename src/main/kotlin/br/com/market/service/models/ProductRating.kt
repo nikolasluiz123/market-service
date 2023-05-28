@@ -13,7 +13,7 @@ data class ProductRating(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company? = null,
     @Column(name = "local_id")
-    override var localId: UUID? = null,
+    override var localId: String? = null,
     var rating: Double = 0.0,
     var comment: String? = null,
     var date: LocalDateTime = LocalDateTime.now(),

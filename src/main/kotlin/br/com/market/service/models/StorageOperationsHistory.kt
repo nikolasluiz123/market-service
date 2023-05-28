@@ -14,7 +14,7 @@ data class StorageOperationsHistory(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company? = null,
     @Column(name = "local_id")
-    override var localId: UUID? = null,
+    override var localId: String? = null,
     @Column(name = "date_realization")
     var dateRealization: LocalDateTime = LocalDateTime.now(),
     @Column(name = "date_prevision")

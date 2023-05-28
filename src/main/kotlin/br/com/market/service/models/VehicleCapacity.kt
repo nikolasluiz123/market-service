@@ -13,7 +13,7 @@ data class VehicleCapacity(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company? = null,
     @Column(name = "local_id")
-    override var localId: UUID? = null,
+    override var localId: String? = null,
     var capacity: Int = 0,
     @Column(name = "capacity_unit")
     var capacityUnit: EnumUnit? = null,

@@ -12,6 +12,6 @@ data class Brand(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company? = null,
     @Column(name = "local_id")
-    override var localId: UUID? = null,
+    override var localId: String? = null,
     var name: String? = null
 ) : MobileCompanyModel()

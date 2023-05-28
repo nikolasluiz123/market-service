@@ -9,7 +9,7 @@ data class ThemeDefinitionsDTO(
     var imageLogo: ByteArray,
     override var id: Long? = null,
     override var active: Boolean = true,
-): BaseDTO() {
+) : BaseDTO() {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -2,7 +2,6 @@ package br.com.market.service.models
 
 import br.com.market.service.models.base.MobileCompanyModel
 import jakarta.persistence.*
-import java.util.*
 
 @Entity(name = "addresses")
 data class Address(
@@ -12,7 +11,7 @@ data class Address(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company? = null,
     @Column(name = "local_id")
-    override var localId: UUID? = null,
+    override var localId: String? = null,
     var state: String? = null,
     var city: String? = null,
     @Column(name = "public_place")

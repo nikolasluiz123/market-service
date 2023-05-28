@@ -12,8 +12,8 @@ data class DeliveryMan(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company? = null,
     @Column(name = "local_id")
-    override var localId: UUID? = null,
-    @OneToOne @PrimaryKeyJoinColumn(name = "user_id")
+    override var localId: String? = null,
+    @OneToOne @JoinColumn(name = "user_id")
     var user: User? = null,
     @ManyToOne @JoinColumn(name = "vehicle_id")
     var vehicle: Vehicle? = null

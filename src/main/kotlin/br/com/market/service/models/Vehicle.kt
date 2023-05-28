@@ -13,6 +13,6 @@ data class Vehicle(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company?,
     @Column(name = "local_id")
-    override var localId: UUID?,
+    override var localId: String?,
     var type: EnumVehicleType? = null,
 ): MobileCompanyModel()

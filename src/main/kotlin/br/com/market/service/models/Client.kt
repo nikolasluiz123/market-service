@@ -12,10 +12,10 @@ data class Client(
     @ManyToOne @JoinColumn(name = "company_id")
     override var company: Company? = null,
     @Column(name = "local_id")
-    override var localId: UUID? = null,
+    override var localId: String? = null,
     val cpf: String? = null,
     @Column(name = "user_id")
     var user: User? = null,
-    @OneToOne @PrimaryKeyJoinColumn(name = "address_id")
+    @OneToOne @JoinColumn(name = "address_id")
     var address: Address? = null,
 ): MobileCompanyModel()

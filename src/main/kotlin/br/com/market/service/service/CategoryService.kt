@@ -3,13 +3,17 @@ package br.com.market.service.service
 import br.com.market.service.dto.category.CategoryDTO
 import br.com.market.service.models.Category
 import br.com.market.service.repository.category.ICategoryRepository
+import br.com.market.service.repository.category.ICustomCategoryRepository
 import org.springframework.stereotype.Service
 
 @Service
-class CategoryService(private val repository: ICategoryRepository) {
+class CategoryService(
+    private val repository: ICategoryRepository,
+    private val customRepository: ICustomCategoryRepository
+) {
 
     fun save(dto: CategoryDTO) {
-        val category = repository.findCategoryByLocalId(dto.localId)?.copy(
+        val category = customRepository.findCategoryByLocalId(dto.localId)?.copy(
             name = dto.name,
             localId = dto.localId,
             active = dto.active
@@ -23,7 +27,7 @@ class CategoryService(private val repository: ICategoryRepository) {
     }
 
     fun toggleActive(categoryDTO: CategoryDTO) {
-        repository.findCategoryByLocalId(categoryDTO.localId)?.let {
+        customRepository.findCategoryByLocalId(categoryDTO.localId)?.let {
             repository.save(it.copy(active = !it.active))
         }
     }

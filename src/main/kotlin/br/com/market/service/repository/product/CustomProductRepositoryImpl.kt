@@ -1,31 +1,33 @@
-package br.com.market.service.repository.brand
+package br.com.market.service.repository.product
 
 import br.com.market.service.extensions.setParameters
-import br.com.market.service.models.Brand
+import br.com.market.service.models.Product
 import br.com.market.service.query.Parameter
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import jakarta.persistence.PersistenceContext
+import org.springframework.stereotype.Repository
 import java.util.*
 
-class BrandRepositoryImpl : ICustomBrandRepository {
+@Repository
+class CustomProductRepositoryImpl : ICustomProductRepository {
 
     @PersistenceContext
     private lateinit var entityManager: EntityManager
 
-    override fun findBrandByLocalId(localId: UUID): Brand? {
+    override fun findProductByLocalId(localId: String): Product? {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
         with(sql) {
-            add("SELECT c")
-            add("FROM ${Brand::class.java.name} c ")
-            add("WHERE c.idLocal = :pIdLocal")
+            add("SELECT p")
+            add("FROM ${Product::class.java.name} p ")
+            add("WHERE p.localId = :pLocalId")
         }
 
-        params.add(Parameter(name = "pIdLocal", value = localId))
+        params.add(Parameter(name = "pLocalId", value = localId))
 
-        val query = entityManager.createQuery(sql.toString(), Brand::class.java)
+        val query = entityManager.createQuery(sql.toString(), Product::class.java)
         query.setParameters(params)
 
         return try {
