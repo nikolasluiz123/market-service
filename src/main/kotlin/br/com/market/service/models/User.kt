@@ -15,7 +15,9 @@ data class User(
     var email: String = "",
     private var password: String = "",
     @Enumerated(EnumType.STRING)
-    var role: EnumRole = EnumRole.USER
+    var role: EnumRole = EnumRole.USER,
+    var localId: String? = null,
+    var token: String? = null
 ) : UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {

@@ -1,6 +1,6 @@
 package br.com.market.service.security.config
 
-import br.com.market.service.repository.UserRepository
+import br.com.market.service.repository.user.IUserRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 
 
 @Configuration
-class ApplicationConfig(private val userRepository: UserRepository) {
+class ApplicationConfig(private val userRepository: IUserRepository) {
 
     @Bean
     fun userDetailsService(): UserDetailsService {
