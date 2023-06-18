@@ -23,6 +23,13 @@ class StorageOperationsHistoryController(private val service: StorageOperationsH
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
+    @PostMapping("/inactivate")
+    @Transactional(timeout = 600)
+    fun inactivate(@RequestParam localId: String): ResponseEntity<PersistenceResponse> {
+        service.inactivate(localId)
+        return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
+    }
+
     @PostMapping("/sync")
     @Transactional(timeout = 600)
     fun sync(@RequestBody @Valid storageOperationHistoryDTOS: List<StorageOperationHistoryDTO>): ResponseEntity<MarketServiceResponse> {

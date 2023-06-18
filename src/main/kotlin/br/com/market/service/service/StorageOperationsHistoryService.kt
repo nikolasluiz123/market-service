@@ -65,4 +65,10 @@ class StorageOperationsHistoryService(
         }
     }
 
+    fun inactivate(localId: String) {
+        customStorageOperationsHistoryRepository.findStorageOperationHistoryByLocalId(localId)?.let {
+            storageOperationsHistoryRepository.save(it.copy(active = false))
+        }
+    }
+
 }
