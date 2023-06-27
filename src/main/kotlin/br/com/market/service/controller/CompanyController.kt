@@ -27,4 +27,11 @@ class CompanyController(private val service: CompanyService) {
         service.save(companyDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
+
+    @PostMapping("/toggleActive")
+    @Transactional(timeout = 600)
+    fun toggleActive(@RequestParam companyId: Long): ResponseEntity<PersistenceResponse> {
+        service.toggleActive(companyId)
+        return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
+    }
 }

@@ -7,6 +7,7 @@ import br.com.market.service.models.ThemeDefinitions
 import br.com.market.service.repository.company.CompanyRepository
 import br.com.market.service.repository.company.ThemeDefinitionsRepository
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class CompanyService(
@@ -18,16 +19,19 @@ class CompanyService(
         lateinit var theme: ThemeDefinitions
 
         with(companyDTO.themeDefinitionsDTO) {
-            theme = themeDefinitionsRepository.save(
+            theme = if (id != null) {
+                themeDefinitionsRepository.findById(id!!).get()
+            } else {
                 ThemeDefinitions(
-                    id = id,
                     active = active,
                     colorPrimary = colorPrimary,
                     colorSecondary = colorSecondary,
                     colorTertiary = colorTertiary,
                     imageLogo = imageLogo
                 )
-            )
+            }
+
+            theme = themeDefinitionsRepository.save(theme)
         }
 
         with(companyDTO) {
@@ -46,8 +50,18 @@ class CompanyService(
                     colorSecondary = it.themeDefinitions?.colorSecondary!!,
                     colorTertiary = it.themeDefinitions?.colorTertiary!!,
                     imageLogo = it.themeDefinitions?.imageLogo!!
-                )
+                ),
+                active = it.active
             )
+        }
+    }
+
+    fun toggleActive(companyId: Long) {
+        companyRepository.findById(companyId).getOrNull()?.let {
+            companyRepository.save(it.copy(active = !it.active))
+
+            val themeDefinitions = themeDefinitionsRepository.findById(it.themeDefinitions?.id!!).get().copy(active = !it.themeDefinitions!!.active)
+            themeDefinitionsRepository.save(themeDefinitions)
         }
     }
 }
