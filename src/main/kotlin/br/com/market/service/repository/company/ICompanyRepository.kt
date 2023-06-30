@@ -4,4 +4,4 @@ import br.com.market.service.models.Company
 import org.springframework.data.jpa.repository.JpaRepository
 
 
-interface CompanyRepository : JpaRepository<Company, Long>
+interface ICompanyRepository : JpaRepository<Company, Long>

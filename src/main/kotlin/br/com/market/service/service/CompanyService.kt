@@ -4,14 +4,14 @@ import br.com.market.service.dto.company.CompanyDTO
 import br.com.market.service.dto.theme.ThemeDefinitionsDTO
 import br.com.market.service.models.Company
 import br.com.market.service.models.ThemeDefinitions
-import br.com.market.service.repository.company.CompanyRepository
+import br.com.market.service.repository.company.ICompanyRepository
 import br.com.market.service.repository.company.ThemeDefinitionsRepository
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
 
 @Service
 class CompanyService(
-    private val companyRepository: CompanyRepository,
+    private val companyRepository: ICompanyRepository,
     private val themeDefinitionsRepository: ThemeDefinitionsRepository
 ) {
 
