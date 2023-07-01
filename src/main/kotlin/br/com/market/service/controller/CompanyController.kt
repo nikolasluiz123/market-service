@@ -34,4 +34,18 @@ class CompanyController(private val service: CompanyService) {
         service.toggleActive(companyId)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
+
+    @GetMapping("/{deviceId}")
+    @Transactional(timeout = 600)
+    fun findByDeviceId(@PathVariable deviceId: String): ResponseEntity<ReadResponse<CompanyDTO>> {
+        val company = service.findByDeviceId(deviceId)
+
+        return ResponseEntity.ok(
+            ReadResponse(
+                values = company.let(::listOf),
+                code = HttpStatus.OK.value(),
+                success = true,
+            )
+        )
+    }
 }

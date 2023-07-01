@@ -23,7 +23,7 @@ class DeviceController(private val service: DeviceService) {
 
     @PostMapping("/toggleActive")
     @Transactional(timeout = 600)
-    fun toggleActive(@RequestParam deviceId: Long): ResponseEntity<PersistenceResponse> {
+    fun toggleActive(@RequestParam deviceId: String): ResponseEntity<PersistenceResponse> {
         service.toggleActive(deviceId)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
@@ -33,5 +33,19 @@ class DeviceController(private val service: DeviceService) {
     fun findAll(): ResponseEntity<ReadResponse<DeviceDTO>> {
         val values = service.findAll()
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
+    }
+
+    @GetMapping("/{id}")
+    @Transactional(timeout = 600)
+    fun findById(@PathVariable id: String): ResponseEntity<ReadResponse<DeviceDTO>> {
+        val device = service.findById(id)
+
+        return ResponseEntity.ok(
+            ReadResponse(
+                values = device?.let(::listOf) ?: emptyList(),
+                code = HttpStatus.OK.value(),
+                success = true,
+            )
+        )
     }
 }

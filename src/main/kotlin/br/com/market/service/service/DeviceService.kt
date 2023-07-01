@@ -5,6 +5,7 @@ import br.com.market.service.models.Device
 import br.com.market.service.repository.company.ICompanyRepository
 import br.com.market.service.repository.device.IDeviceRepository
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class DeviceService(
@@ -14,27 +15,23 @@ class DeviceService(
 
     fun save(deviceDTO: DeviceDTO) {
         with(deviceDTO) {
-            val device = if (id != null) {
-                deviceRepository.findById(id!!).get().copy(
-                    name = name,
-                    imei = imei,
-                    company = companyRepository.findById(companyId!!).get(),
-                    active = active
-                )
-            } else {
-                Device(
-                    active = active,
-                    company = companyRepository.findById(companyId!!).get(),
-                    imei = imei,
-                    name = name
-                )
-            }
+            val device = deviceRepository.findById(id!!).getOrNull()?.copy(
+                id = id,
+                name = name,
+                company = companyRepository.findById(companyId!!).get(),
+                active = active
+            ) ?: Device(
+                id = id,
+                active = active,
+                company = companyRepository.findById(companyId!!).get(),
+                name = name
+            )
 
             deviceRepository.save(device)
         }
     }
 
-    fun toggleActive(deviceId: Long) {
+    fun toggleActive(deviceId: String) {
         deviceRepository.findById(deviceId).get().apply {
             deviceRepository.save(copy(active = !active))
         }
@@ -46,8 +43,18 @@ class DeviceService(
                 id = it.id,
                 active = it.active,
                 name = it.name,
-                imei = it.imei,
                 companyId = it.company?.id!!
+            )
+        }
+    }
+
+    fun findById(id: String): DeviceDTO? {
+        return deviceRepository.findById(id).getOrNull()?.run {
+            DeviceDTO(
+                id = id,
+                active = active,
+                name = name,
+                companyId = company?.id!!
             )
         }
     }

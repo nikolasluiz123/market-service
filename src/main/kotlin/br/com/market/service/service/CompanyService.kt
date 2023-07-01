@@ -5,6 +5,7 @@ import br.com.market.service.dto.theme.ThemeDefinitionsDTO
 import br.com.market.service.models.Company
 import br.com.market.service.models.ThemeDefinitions
 import br.com.market.service.repository.company.ICompanyRepository
+import br.com.market.service.repository.company.ICustomCompanyRepository
 import br.com.market.service.repository.company.ThemeDefinitionsRepository
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
@@ -12,6 +13,7 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class CompanyService(
     private val companyRepository: ICompanyRepository,
+    private val customCompanyRepository: ICustomCompanyRepository,
     private val themeDefinitionsRepository: ThemeDefinitionsRepository
 ) {
 
@@ -62,6 +64,23 @@ class CompanyService(
 
             val themeDefinitions = themeDefinitionsRepository.findById(it.themeDefinitions?.id!!).get().copy(active = !it.themeDefinitions!!.active)
             themeDefinitionsRepository.save(themeDefinitions)
+        }
+    }
+
+    fun findByDeviceId(deviceId: String): CompanyDTO {
+        return customCompanyRepository.findByDeviceId(deviceId)!!.run {
+            CompanyDTO(
+                id = id,
+                name = name,
+                themeDefinitionsDTO = ThemeDefinitionsDTO(
+                    id = themeDefinitions?.id,
+                    colorPrimary = themeDefinitions?.colorPrimary!!,
+                    colorSecondary = themeDefinitions?.colorSecondary!!,
+                    colorTertiary = themeDefinitions?.colorTertiary!!,
+                    imageLogo = themeDefinitions?.imageLogo!!
+                ),
+                active = active
+            )
         }
     }
 }
