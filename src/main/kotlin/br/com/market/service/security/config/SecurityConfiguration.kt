@@ -2,6 +2,7 @@ package br.com.market.service.security.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -23,6 +24,8 @@ class SecurityConfiguration(
             .authorizeHttpRequests()
             .requestMatchers("/api/v1/user/register").permitAll()
             .requestMatchers("/api/v1/user/authenticate").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/v1/user").permitAll()
+            .requestMatchers("/api/v1/user/sync").permitAll()
             .anyRequest().authenticated()
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

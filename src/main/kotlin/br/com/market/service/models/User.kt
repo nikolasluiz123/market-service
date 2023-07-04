@@ -17,7 +17,9 @@ data class User(
     @Enumerated(EnumType.STRING)
     var role: EnumRole = EnumRole.USER,
     var localId: String? = null,
-    var token: String? = null
+    var token: String? = null,
+    @ManyToOne @JoinColumn(name = "company_id")
+    var company: Company? = null,
 ) : UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
