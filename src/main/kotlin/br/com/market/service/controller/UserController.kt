@@ -2,6 +2,7 @@ package br.com.market.service.controller
 
 import br.com.market.service.dto.auth.AuthenticationRequestDTO
 import br.com.market.service.dto.auth.UserDTO
+import br.com.market.service.dto.filter.UserFiltersDTO
 import br.com.market.service.response.AuthenticationResponse
 import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.ReadResponse
@@ -30,8 +31,8 @@ class UserController(private val service: UserService) {
 
     @GetMapping
     @Transactional(timeout = 600)
-    fun findAll(): ResponseEntity<ReadResponse<UserDTO>> {
-        val values = service.findAllUserDTOs()
+    fun findAll(@RequestBody userFiltersDTO: UserFiltersDTO): ResponseEntity<ReadResponse<UserDTO>> {
+        val values = service.findAllUserDTOs(userFiltersDTO)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 

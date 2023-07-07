@@ -2,6 +2,7 @@ package br.com.market.service.service
 
 import br.com.market.service.dto.auth.AuthenticationRequestDTO
 import br.com.market.service.dto.auth.UserDTO
+import br.com.market.service.dto.filter.UserFiltersDTO
 import br.com.market.service.models.User
 import br.com.market.service.repository.user.ICustomUserRepository
 import br.com.market.service.repository.user.IUserRepository
@@ -62,15 +63,16 @@ class UserService(
         return AuthenticationResponse(code = HttpStatus.OK.value(), token = token, userLocalId = userLocalId, success = true)
     }
 
-    fun findAllUserDTOs(): List<UserDTO> {
-        return userRepository.findAll().map {
+    fun findAllUserDTOs(userFiltersDTO: UserFiltersDTO): List<UserDTO> {
+        return customUserRepository.findAll(userFiltersDTO).map {
             UserDTO(
                 id = it.id,
                 localId = it.localId!!,
                 name = it.name,
                 email = it.email,
                 password = passwordEncoder.encode(it.password),
-                active = true
+                active = true,
+                companyId = it.company!!.id
             )
         }
     }
@@ -81,7 +83,9 @@ class UserService(
                 localId = it.localId,
                 name = it.name,
                 email = it.email,
-                password = passwordEncoder.encode(it.password)
+                password = passwordEncoder.encode(it.password),
+                id = it.id,
+                token = it.token
             )
 
             userRepository.save(user)

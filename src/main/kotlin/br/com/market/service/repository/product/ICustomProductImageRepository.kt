@@ -1,5 +1,6 @@
 package br.com.market.service.repository.product
 
+import br.com.market.service.dto.filter.ProductImageFiltersDTO
 import br.com.market.service.models.ProductImage
 
 interface ICustomProductImageRepository {
@@ -11,4 +12,5 @@ interface ICustomProductImageRepository {
     fun toggleActiveProductImagesByProductLocalId(localProductId: String, active: Boolean)
 
     fun updateProductImagePrincipal(productId: Long, id: Long)
+    fun findAll(productImageFiltersDTO: ProductImageFiltersDTO): List<ProductImage>
 }

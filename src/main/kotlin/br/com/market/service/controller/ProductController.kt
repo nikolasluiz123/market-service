@@ -1,5 +1,7 @@
 package br.com.market.service.controller
 
+import br.com.market.service.dto.filter.ProductFiltersDTO
+import br.com.market.service.dto.filter.ProductImageFiltersDTO
 import br.com.market.service.dto.product.ProductBodyDTO
 import br.com.market.service.dto.product.ProductDTO
 import br.com.market.service.dto.product.ProductImageDTO
@@ -54,15 +56,15 @@ class ProductController(private val service: ProductService) {
 
     @GetMapping
     @Transactional(timeout = 600)
-    fun findAllProductDTOs(): ResponseEntity<ReadResponse<ProductDTO>> {
-        val values = service.findAllProductDTOs()
+    fun findAllProductDTOs(@RequestBody productFiltersDTO: ProductFiltersDTO): ResponseEntity<ReadResponse<ProductDTO>> {
+        val values = service.findAllProductDTOs(productFiltersDTO)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 
     @GetMapping("/images")
     @Transactional(timeout = 600)
-    fun findAllProductImageDTOs(): ResponseEntity<ReadResponse<ProductImageDTO>> {
-        val values = service.findAllProductImageDTOs()
+    fun findAllProductImageDTOs(@RequestBody productImageFiltersDTO: ProductImageFiltersDTO): ResponseEntity<ReadResponse<ProductImageDTO>> {
+        val values = service.findAllProductImageDTOs(productImageFiltersDTO)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }

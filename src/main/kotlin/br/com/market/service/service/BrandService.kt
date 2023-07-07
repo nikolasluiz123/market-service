@@ -3,6 +3,8 @@ package br.com.market.service.service
 import br.com.market.service.dto.brand.BrandBodyDTO
 import br.com.market.service.dto.brand.BrandDTO
 import br.com.market.service.dto.brand.CategoryBrandDTO
+import br.com.market.service.dto.filter.BrandFiltersDTO
+import br.com.market.service.dto.filter.CategoryBrandFiltersDTO
 import br.com.market.service.models.Brand
 import br.com.market.service.models.CategoryBrand
 import br.com.market.service.repository.brand.IBrandRepository
@@ -58,25 +60,27 @@ class BrandService(
         brandBodyDTOs.forEach(::save)
     }
 
-    fun findAllBrandDTOs(): List<BrandDTO> {
-        return brandRepository.findAll().map {
+    fun findAllBrandDTOs(brandFiltersDTO: BrandFiltersDTO): List<BrandDTO> {
+        return customBrandRepository.findBrands(brandFiltersDTO).map {
             BrandDTO(
                 localId = it.localId!!,
                 name = it.name,
                 companyId = it.company?.id,
-                active = it.active
+                active = it.active,
+                id = it.id
             )
         }
     }
 
-    fun findAllCategoryBrandDTOs(): List<CategoryBrandDTO> {
-        return categoryBrandRepository.findAll().map {
+    fun findAllCategoryBrandDTOs(categoryBrandFiltersDTO: CategoryBrandFiltersDTO): List<CategoryBrandDTO> {
+        return customCategoryBrandRepository.findCategoryBrands(categoryBrandFiltersDTO).map {
             CategoryBrandDTO(
                 localId = it.localId!!,
                 companyId = it.company?.id,
                 active = it.active,
                 localCategoryId = it.category?.localId!!,
-                localBrandId = it.brand?.localId!!
+                localBrandId = it.brand?.localId!!,
+                id = it.id
             )
         }
     }

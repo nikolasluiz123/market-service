@@ -1,6 +1,8 @@
 package br.com.market.service.controller
 
 import br.com.market.service.dto.brand.*
+import br.com.market.service.dto.filter.BrandFiltersDTO
+import br.com.market.service.dto.filter.CategoryBrandFiltersDTO
 import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
@@ -38,15 +40,15 @@ class BrandController(private val service: BrandService) {
 
     @GetMapping
     @Transactional(timeout = 600)
-    fun findAllBrandDTOs(): ResponseEntity<ReadResponse<BrandDTO>> {
-        val values = service.findAllBrandDTOs()
+    fun findAllBrandDTOs(@RequestBody brandFiltersDTO: BrandFiltersDTO): ResponseEntity<ReadResponse<BrandDTO>> {
+        val values = service.findAllBrandDTOs(brandFiltersDTO)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 
     @GetMapping("/categoryBrand")
     @Transactional(timeout = 600)
-    fun findAllCategoryBrandDTOs(): ResponseEntity<ReadResponse<CategoryBrandDTO>> {
-        val values = service.findAllCategoryBrandDTOs()
+    fun findAllCategoryBrandDTOs(@RequestBody categoryBrandFiltersDTO: CategoryBrandFiltersDTO): ResponseEntity<ReadResponse<CategoryBrandDTO>> {
+        val values = service.findAllCategoryBrandDTOs(categoryBrandFiltersDTO)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }

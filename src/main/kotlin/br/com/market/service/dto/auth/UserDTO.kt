@@ -9,5 +9,6 @@ data class UserDTO(
     var name: String = "",
     var email: String = "",
     var password: String = "",
-    var token: String? = null
+    var token: String? = null,
+    var companyId: Long? = null
 ): MobileDTO()

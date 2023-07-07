@@ -1,5 +1,6 @@
 package br.com.market.service.repository.product
 
+import br.com.market.service.dto.filter.ProductFiltersDTO
 import br.com.market.service.extensions.setParameters
 import br.com.market.service.models.Product
 import br.com.market.service.query.Parameter
@@ -35,6 +36,24 @@ class CustomProductRepositoryImpl : ICustomProductRepository {
         } catch (e: NoResultException) {
             return null
         }
+    }
+
+    override fun findAll(productFiltersDTO: ProductFiltersDTO): List<Product> {
+        val params = mutableListOf<Parameter>()
+        val sql = StringJoiner("\n\t")
+
+        with(sql) {
+            add("SELECT p")
+            add("FROM ${Product::class.java.name} p ")
+            add("WHERE p.company.id = :pCompanyId")
+        }
+
+        params.add(Parameter(name = "pCompanyId", value = productFiltersDTO.companyId))
+
+        val query = entityManager.createQuery(sql.toString(), Product::class.java)
+        query.setParameters(params)
+
+        return query.resultList
     }
 
 }

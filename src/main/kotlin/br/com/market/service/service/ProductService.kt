@@ -1,5 +1,7 @@
 package br.com.market.service.service
 
+import br.com.market.service.dto.filter.ProductFiltersDTO
+import br.com.market.service.dto.filter.ProductImageFiltersDTO
 import br.com.market.service.dto.product.ProductBodyDTO
 import br.com.market.service.dto.product.ProductDTO
 import br.com.market.service.dto.product.ProductImageDTO
@@ -103,8 +105,8 @@ class ProductService(
         productBodyDTOs.forEach(::saveProduct)
     }
 
-    fun findAllProductDTOs(): List<ProductDTO> {
-        return productRepository.findAll().map {
+    fun findAllProductDTOs(productFiltersDTO: ProductFiltersDTO): List<ProductDTO> {
+        return customProductRepository.findAll(productFiltersDTO).map {
             ProductDTO(
                 id = it.id!!,
                 active = it.active,
@@ -119,8 +121,8 @@ class ProductService(
         }
     }
 
-    fun findAllProductImageDTOs(): List<ProductImageDTO> {
-        return productImageRepository.findAll().map {
+    fun findAllProductImageDTOs(productImageFiltersDTO: ProductImageFiltersDTO): List<ProductImageDTO> {
+        return customProductImageRepository.findAll(productImageFiltersDTO).map {
             ProductImageDTO(
                 id = it.id,
                 localId = it.localId!!,
