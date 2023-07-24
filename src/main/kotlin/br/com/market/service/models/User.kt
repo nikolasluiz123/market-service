@@ -6,6 +6,11 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
+/**
+ * Classe que representa a tabela dos usuários.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Entity
 @Table(name = "users")
 data class User(
@@ -18,8 +23,8 @@ data class User(
     var role: EnumRole = EnumRole.USER,
     var localId: String? = null,
     var token: String? = null,
-    @ManyToOne @JoinColumn(name = "company_id")
-    var company: Company? = null,
+    @ManyToOne @JoinColumn(name = "market_id")
+    var market: Market? = null,
 ) : UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {

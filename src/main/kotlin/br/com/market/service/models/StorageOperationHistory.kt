@@ -1,17 +1,22 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileCompanyModel
+import br.com.market.service.models.base.MobileMarketModel
 import br.com.market.service.models.enumeration.EnumOperationType
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
+/**
+ * Classe que representa a tabela das operações de estoque realizadas.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Entity(name = "storage_operations_history")
 data class StorageOperationHistory(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     override var id: Long? = null,
     override var active: Boolean = true,
-    @ManyToOne @JoinColumn(name = "company_id")
-    override var company: Company? = null,
+    @ManyToOne @JoinColumn(name = "market_id")
+    override var market: Market? = null,
     @Column(name = "local_id")
     override var localId: String? = null,
     @Column(name = "date_realization")
@@ -26,4 +31,4 @@ data class StorageOperationHistory(
     var quantity: Int? = null,
     @ManyToOne @JoinColumn(name = "user_id")
     var user: User? = null
-): MobileCompanyModel()
+): MobileMarketModel()

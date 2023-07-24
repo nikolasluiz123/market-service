@@ -3,6 +3,11 @@ package br.com.market.service.models
 import br.com.market.service.models.base.BaseModel
 import jakarta.persistence.*
 
+/**
+ * Classe que representa a tabela dos themas de cada empresa.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Entity(name = "theme_definitions")
 data class ThemeDefinitions(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -36,4 +36,22 @@ class CustomStorageOperationsHistoryRepositoryImpl: ICustomStorageOperationsHist
             return null
         }
     }
+
+    override fun findAll(marketId: Long): List<StorageOperationHistory> {
+        val params = mutableListOf<Parameter>()
+        val sql = StringJoiner("\n\t")
+
+        with(sql) {
+            add("SELECT s")
+            add("FROM ${StorageOperationHistory::class.java.name} s ")
+            add("WHERE s.market.id = :pMarketId")
+        }
+
+        params.add(Parameter(name = "pMarketId", value = marketId))
+
+        val query = entityManager.createQuery(sql.toString(), StorageOperationHistory::class.java)
+        query.setParameters(params)
+
+        return query.resultList
+    }
 }

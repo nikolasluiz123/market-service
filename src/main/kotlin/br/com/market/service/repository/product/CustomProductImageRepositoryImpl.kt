@@ -1,6 +1,5 @@
 package br.com.market.service.repository.product
 
-import br.com.market.service.dto.filter.ProductImageFiltersDTO
 import br.com.market.service.extensions.setParameters
 import br.com.market.service.models.ProductImage
 import br.com.market.service.query.Parameter
@@ -99,17 +98,17 @@ class CustomProductImageRepositoryImpl : ICustomProductImageRepository {
         query.executeUpdate()
     }
 
-    override fun findAll(productImageFiltersDTO: ProductImageFiltersDTO): List<ProductImage> {
+    override fun findAll(marketId: Long): List<ProductImage> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
         with(sql) {
             add("SELECT pi")
             add("FROM ${ProductImage::class.java.name} pi ")
-            add("WHERE pi.company.id = :pCompanyId")
+            add("WHERE pi.market.id = :pMarketId")
         }
 
-        params.add(Parameter(name = "pCompanyId", value = productImageFiltersDTO.companyId))
+        params.add(Parameter(name = "pMarketId", value = marketId))
 
         val query = entityManager.createQuery(sql.toString(), ProductImage::class.java)
         query.setParameters(params)

@@ -1,6 +1,5 @@
 package br.com.market.service.repository.brand
 
-import br.com.market.service.dto.filter.CategoryBrandFiltersDTO
 import br.com.market.service.extensions.setParameters
 import br.com.market.service.models.CategoryBrand
 import br.com.market.service.query.Parameter
@@ -38,17 +37,17 @@ class CustomCategoryBrandRepositoryImpl : ICustomCategoryBrandRepository {
         }
     }
 
-    override fun findCategoryBrands(categoryBrandFiltersDTO: CategoryBrandFiltersDTO): List<CategoryBrand> {
+    override fun findCategoryBrands(marketId: Long): List<CategoryBrand> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
         with(sql) {
             add("SELECT c")
             add("FROM ${CategoryBrand::class.java.name} c ")
-            add("WHERE c.company.id = :pCompanyId")
+            add("WHERE c.market.id = :pMarketId")
         }
 
-        params.add(Parameter(name = "pCompanyId", value = categoryBrandFiltersDTO.companyId))
+        params.add(Parameter(name = "pMarketId", value = marketId))
 
         val query = entityManager.createQuery(sql.toString(), CategoryBrand::class.java)
         query.setParameters(params)

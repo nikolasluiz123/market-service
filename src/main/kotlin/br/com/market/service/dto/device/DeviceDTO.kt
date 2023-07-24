@@ -4,5 +4,5 @@ data class DeviceDTO(
     var id: String? = null,
     var active: Boolean = true,
     var name: String? = null,
-    var companyId: Long? = null
+    var marketId: Long? = null
 )

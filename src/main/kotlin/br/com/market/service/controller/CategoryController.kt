@@ -1,7 +1,6 @@
 package br.com.market.service.controller
 
 import br.com.market.service.dto.category.CategoryDTO
-import br.com.market.service.dto.filter.CategoryFiltersDTO
 import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
@@ -40,8 +39,8 @@ class CategoryController(private val service: CategoryService) {
 
     @GetMapping
     @Transactional(timeout = 600)
-    fun findAll(@RequestBody categoryFiltersDTO: CategoryFiltersDTO): ResponseEntity<ReadResponse<CategoryDTO>> {
-        val values = service.findAll(categoryFiltersDTO)
+    fun findAll(@RequestParam marketId: Long): ResponseEntity<ReadResponse<CategoryDTO>> {
+        val values = service.findAll(marketId)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }

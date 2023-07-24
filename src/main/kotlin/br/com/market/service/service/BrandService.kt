@@ -3,8 +3,6 @@ package br.com.market.service.service
 import br.com.market.service.dto.brand.BrandBodyDTO
 import br.com.market.service.dto.brand.BrandDTO
 import br.com.market.service.dto.brand.CategoryBrandDTO
-import br.com.market.service.dto.filter.BrandFiltersDTO
-import br.com.market.service.dto.filter.CategoryBrandFiltersDTO
 import br.com.market.service.models.Brand
 import br.com.market.service.models.CategoryBrand
 import br.com.market.service.repository.brand.IBrandRepository
@@ -12,6 +10,7 @@ import br.com.market.service.repository.brand.ICategoryBrandRepository
 import br.com.market.service.repository.brand.ICustomBrandRepository
 import br.com.market.service.repository.brand.ICustomCategoryBrandRepository
 import br.com.market.service.repository.category.ICustomCategoryRepository
+import br.com.market.service.repository.market.IMarketRepository
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,7 +19,8 @@ class BrandService(
     private val customBrandRepository: ICustomBrandRepository,
     private val customCategoryRepository: ICustomCategoryRepository,
     private val categoryBrandRepository: ICategoryBrandRepository,
-    private val customCategoryBrandRepository: ICustomCategoryBrandRepository
+    private val customCategoryBrandRepository: ICustomCategoryBrandRepository,
+    private val marketRepository: IMarketRepository
     ) {
     
     fun save(brandBodyDTO: BrandBodyDTO) {
@@ -32,17 +32,19 @@ class BrandService(
             ) ?: Brand(
                 name = name,
                 localId = localId,
-                active = active
+                active = active,
+                market = marketRepository.findById(marketId!!).get()
             )
 
             brandRepository.save(brand)
 
             with(brandBodyDTO.categoryBrand) {
-                val categoryBrand = CategoryBrand(
+                val categoryBrand = customCategoryBrandRepository.findCategoryBrandByLocalId(localId) ?: CategoryBrand(
                     localId = localId,
                     category = customCategoryRepository.findCategoryByLocalId(localCategoryId),
                     brand = brand,
-                    active = active
+                    active = active,
+                    market = marketRepository.findById(marketId!!).get()
                 )
 
                 categoryBrandRepository.save(categoryBrand)
@@ -60,23 +62,23 @@ class BrandService(
         brandBodyDTOs.forEach(::save)
     }
 
-    fun findAllBrandDTOs(brandFiltersDTO: BrandFiltersDTO): List<BrandDTO> {
-        return customBrandRepository.findBrands(brandFiltersDTO).map {
+    fun findAllBrandDTOs(marketId: Long): List<BrandDTO> {
+        return customBrandRepository.findBrands(marketId).map {
             BrandDTO(
                 localId = it.localId!!,
                 name = it.name,
-                companyId = it.company?.id,
+                marketId = it.market?.id,
                 active = it.active,
                 id = it.id
             )
         }
     }
 
-    fun findAllCategoryBrandDTOs(categoryBrandFiltersDTO: CategoryBrandFiltersDTO): List<CategoryBrandDTO> {
-        return customCategoryBrandRepository.findCategoryBrands(categoryBrandFiltersDTO).map {
+    fun findAllCategoryBrandDTOs(marketId: Long): List<CategoryBrandDTO> {
+        return customCategoryBrandRepository.findCategoryBrands(marketId).map {
             CategoryBrandDTO(
                 localId = it.localId!!,
-                companyId = it.company?.id,
+                marketId = it.market?.id,
                 active = it.active,
                 localCategoryId = it.category?.localId!!,
                 localBrandId = it.brand?.localId!!,

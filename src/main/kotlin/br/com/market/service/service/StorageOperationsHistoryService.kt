@@ -2,6 +2,7 @@ package br.com.market.service.service
 
 import br.com.market.service.dto.storageoperationhistory.StorageOperationHistoryDTO
 import br.com.market.service.models.StorageOperationHistory
+import br.com.market.service.repository.market.IMarketRepository
 import br.com.market.service.repository.product.ICustomProductRepository
 import br.com.market.service.repository.storageoperationshistory.ICustomStorageOperationsHistoryRepository
 import br.com.market.service.repository.storageoperationshistory.IStorageOperationsHistoryRepository
@@ -13,7 +14,8 @@ class StorageOperationsHistoryService(
     private val storageOperationsHistoryRepository: IStorageOperationsHistoryRepository,
     private val customStorageOperationsHistoryRepository: ICustomStorageOperationsHistoryRepository,
     private val customProductRepository: ICustomProductRepository,
-    private val customUserRepository: ICustomUserRepository
+    private val customUserRepository: ICustomUserRepository,
+    private val marketRepository: IMarketRepository
 ) {
 
     fun save(dto: StorageOperationHistoryDTO) {
@@ -37,7 +39,8 @@ class StorageOperationsHistoryService(
                 user = customUserRepository.findUserByLocalId(dto.userId!!),
                 active = dto.active,
                 localId = dto.localId,
-                quantity = dto.quantity
+                quantity = dto.quantity,
+                market = marketRepository.findById(dto.marketId!!).get()
             )
 
             storageOperationsHistoryRepository.save(storageOperationHistory)
@@ -48,8 +51,8 @@ class StorageOperationsHistoryService(
         storageOperationHistoryDTOS.forEach(::save)
     }
 
-    fun findAllStorageOperationsHistoryDTOs(): List<StorageOperationHistoryDTO> {
-        return storageOperationsHistoryRepository.findAll().map {
+    fun findAllStorageOperationsHistoryDTOs(marketId: Long): List<StorageOperationHistoryDTO> {
+        return customStorageOperationsHistoryRepository.findAll(marketId).map {
             StorageOperationHistoryDTO(
                 localId = it.localId!!,
                 id = it.id,

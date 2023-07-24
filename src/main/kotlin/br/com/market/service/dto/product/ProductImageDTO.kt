@@ -9,7 +9,8 @@ data class ProductImageDTO(
     var bytes: ByteArray? = null,
     var imageUrl: String? = null,
     var productLocalId: String? = null,
-    var principal: Boolean = false
+    var principal: Boolean = false,
+    var marketId: Long? = null
 ) : MobileDTO() {
 
     override fun equals(other: Any?): Boolean {

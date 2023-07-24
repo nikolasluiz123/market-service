@@ -1,13 +1,12 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.filter.ProductFiltersDTO
-import br.com.market.service.dto.filter.ProductImageFiltersDTO
 import br.com.market.service.dto.product.ProductBodyDTO
 import br.com.market.service.dto.product.ProductDTO
 import br.com.market.service.dto.product.ProductImageDTO
 import br.com.market.service.models.Product
 import br.com.market.service.models.ProductImage
 import br.com.market.service.repository.brand.ICustomCategoryBrandRepository
+import br.com.market.service.repository.market.IMarketRepository
 import br.com.market.service.repository.product.ICustomProductImageRepository
 import br.com.market.service.repository.product.ICustomProductRepository
 import br.com.market.service.repository.product.IProductImageRepository
@@ -20,7 +19,8 @@ class ProductService(
     private val customProductRepository: ICustomProductRepository,
     private val productImageRepository: IProductImageRepository,
     private val customProductImageRepository: ICustomProductImageRepository,
-    private val customCategoryBrandRepository: ICustomCategoryBrandRepository
+    private val customCategoryBrandRepository: ICustomCategoryBrandRepository,
+    private val marketRepository: IMarketRepository
 ) {
 
     fun saveProduct(productBodyDTO: ProductBodyDTO) {
@@ -40,7 +40,8 @@ class ProductService(
                 quantityUnit = quantityUnit,
                 categoryBrand = customCategoryBrandRepository.findCategoryBrandByLocalId(categoryBrandLocalId!!),
                 active = active,
-                localId = localId
+                localId = localId,
+                market = marketRepository.findById(marketId!!).get()
             )
 
             productRepository.save(product)
@@ -60,7 +61,8 @@ class ProductService(
                         bytes = bytes,
                         imageUrl = imageUrl,
                         product = product,
-                        principal = principal
+                        principal = principal,
+                        market = marketRepository.findById(marketId!!).get()
                     )
                 }
             }
@@ -105,8 +107,8 @@ class ProductService(
         productBodyDTOs.forEach(::saveProduct)
     }
 
-    fun findAllProductDTOs(productFiltersDTO: ProductFiltersDTO): List<ProductDTO> {
-        return customProductRepository.findAll(productFiltersDTO).map {
+    fun findAllProductDTOs(marketId: Long): List<ProductDTO> {
+        return customProductRepository.findAll(marketId).map {
             ProductDTO(
                 id = it.id!!,
                 active = it.active,
@@ -116,13 +118,13 @@ class ProductService(
                 quantityUnit = it.quantityUnit,
                 quantity = it.quantity,
                 categoryBrandLocalId = it.categoryBrand?.localId,
-                companyId = it.company?.id
+                marketId = it.market?.id
             )
         }
     }
 
-    fun findAllProductImageDTOs(productImageFiltersDTO: ProductImageFiltersDTO): List<ProductImageDTO> {
-        return customProductImageRepository.findAll(productImageFiltersDTO).map {
+    fun findAllProductImageDTOs(marketId: Long): List<ProductImageDTO> {
+        return customProductImageRepository.findAll(marketId).map {
             ProductImageDTO(
                 id = it.id,
                 localId = it.localId!!,
@@ -130,7 +132,8 @@ class ProductService(
                 bytes = it.bytes,
                 imageUrl = it.imageUrl,
                 productLocalId = it.product?.localId,
-                principal = it.principal!!
+                principal = it.principal!!,
+                marketId = it.market?.id!!
             )
         }
     }

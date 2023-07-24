@@ -8,7 +8,7 @@ data class StorageOperationHistoryDTO(
     override var localId: String,
     override var id: Long? = null,
     override var active: Boolean = true,
-    var companyId: Long? = null,
+    var marketId: Long? = null,
     var productId: String? = null,
     var quantity: Int = 0,
     var dateRealization: LocalDateTime? = null,

@@ -2,15 +2,15 @@ package br.com.market.service.service
 
 import br.com.market.service.dto.device.DeviceDTO
 import br.com.market.service.models.Device
-import br.com.market.service.repository.company.ICompanyRepository
 import br.com.market.service.repository.device.IDeviceRepository
+import br.com.market.service.repository.market.IMarketRepository
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrNull
 
 @Service
 class DeviceService(
     private val deviceRepository: IDeviceRepository,
-    private val companyRepository: ICompanyRepository
+    private val marketRepository: IMarketRepository
 ) {
 
     fun save(deviceDTO: DeviceDTO) {
@@ -18,12 +18,12 @@ class DeviceService(
             val device = deviceRepository.findById(id!!).getOrNull()?.copy(
                 id = id,
                 name = name,
-                company = companyRepository.findById(companyId!!).get(),
+                market = marketRepository.findById(marketId!!).get(),
                 active = active
             ) ?: Device(
                 id = id,
                 active = active,
-                company = companyRepository.findById(companyId!!).get(),
+                market = marketRepository.findById(marketId!!).get(),
                 name = name
             )
 
@@ -43,7 +43,7 @@ class DeviceService(
                 id = it.id,
                 active = it.active,
                 name = it.name,
-                companyId = it.company?.id!!
+                marketId = it.market?.id!!
             )
         }
     }
@@ -54,7 +54,7 @@ class DeviceService(
                 id = id,
                 active = active,
                 name = name,
-                companyId = company?.id!!
+                marketId = market?.id!!
             )
         }
     }

@@ -1,10 +1,9 @@
 package br.com.market.service.repository.brand
 
-import br.com.market.service.dto.filter.BrandFiltersDTO
 import br.com.market.service.models.Brand
 
 interface ICustomBrandRepository {
 
     fun findBrandByLocalId(localId: String): Brand?
-    fun findBrands(brandFiltersDTO: BrandFiltersDTO): List<Brand>
+    fun findBrands(marketId: Long): List<Brand>
 }

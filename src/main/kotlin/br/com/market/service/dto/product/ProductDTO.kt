@@ -12,5 +12,5 @@ data class ProductDTO(
     var quantity: Double? = null,
     var quantityUnit: EnumUnit? = null,
     var categoryBrandLocalId: String? = null,
-    var companyId: Long? = null
+    var marketId: Long? = null
 ): MobileDTO()

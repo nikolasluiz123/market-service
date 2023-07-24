@@ -1,8 +1,8 @@
-package br.com.market.service.repository.company
+package br.com.market.service.repository.market
 
 import br.com.market.service.extensions.setParameters
-import br.com.market.service.models.Company
 import br.com.market.service.models.Device
+import br.com.market.service.models.Market
 import br.com.market.service.query.Parameter
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
@@ -11,26 +11,25 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class CustomCompanyRepositoryImpl : ICustomCompanyRepository {
+class CustomMarketRepositoryImpl : ICustomMarketRepository {
 
     @PersistenceContext
     private lateinit var entityManager: EntityManager
 
-    override fun findByDeviceId(deviceId: String): Company? {
+    override fun findByDeviceId(deviceId: String): Market? {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
         with(sql) {
-            add("SELECT c ")
+            add("SELECT m ")
             add("FROM ${Device::class.java.name} d ")
             add("INNER JOIN d.market m ")
-            add("INNER JOIN m.company c")
             add("WHERE d.id = :pDeviceId")
         }
 
         params.add(Parameter(name = "pDeviceId", value = deviceId))
 
-        val query = entityManager.createQuery(sql.toString(), Company::class.java)
+        val query = entityManager.createQuery(sql.toString(), Market::class.java)
         query.setParameters(params)
 
         return try {

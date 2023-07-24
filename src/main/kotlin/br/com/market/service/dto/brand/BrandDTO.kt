@@ -7,5 +7,5 @@ data class BrandDTO(
     override var id: Long? = null,
     override var localId: String,
     var name: String? = null,
-    var companyId: Long? = null
+    var marketId: Long? = null
 ): MobileDTO()

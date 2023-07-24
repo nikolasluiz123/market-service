@@ -1,17 +1,21 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileCompanyModel
+import br.com.market.service.models.base.MobileMarketModel
 import jakarta.persistence.*
 import java.time.LocalDate
-import java.util.*
 
+/**
+ * Classe que representa a tabela dos cartões dos clientes.
+ *
+ * @author Nikolas Luiz Schmitt
+ */
 @Entity(name = "cards")
 data class Card(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     override var id: Long? = null,
     override var active: Boolean = true,
-    @ManyToOne @JoinColumn(name = "company_id")
-    override var company: Company? = null,
+    @ManyToOne @JoinColumn(name = "market_id")
+    override var market: Market? = null,
     @Column(name = "local_id")
     override var localId: String? = null,
     var accaount: String? = null,
@@ -20,4 +24,4 @@ data class Card(
     var validity: LocalDate? = null,
     @ManyToOne @JoinColumn(name = "client_id")
     var client: Client? = null,
-) : MobileCompanyModel()
+) : MobileMarketModel()

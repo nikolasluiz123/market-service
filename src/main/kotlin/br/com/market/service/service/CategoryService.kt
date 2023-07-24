@@ -1,18 +1,17 @@
 package br.com.market.service.service
 
 import br.com.market.service.dto.category.CategoryDTO
-import br.com.market.service.dto.filter.CategoryFiltersDTO
 import br.com.market.service.models.Category
 import br.com.market.service.repository.category.ICategoryRepository
 import br.com.market.service.repository.category.ICustomCategoryRepository
-import br.com.market.service.repository.company.ICompanyRepository
+import br.com.market.service.repository.market.IMarketRepository
 import org.springframework.stereotype.Service
 
 @Service
 class CategoryService(
     private val categoryRepository: ICategoryRepository,
     private val customCategoryRepository: ICustomCategoryRepository,
-    private val companyRepository: ICompanyRepository
+    private val marketRepository: IMarketRepository
 ) {
 
     fun save(dto: CategoryDTO) {
@@ -24,7 +23,7 @@ class CategoryService(
             name = dto.name,
             localId = dto.localId,
             active = dto.active,
-            company = companyRepository.findById(dto.companyId!!).get()
+            market = marketRepository.findById(dto.marketId!!).get()
         )
 
         categoryRepository.save(category)
@@ -40,12 +39,12 @@ class CategoryService(
         categoriesDTOs.forEach(::save)
     }
 
-    fun findAll(categoryFiltersDTO: CategoryFiltersDTO): List<CategoryDTO> {
-        return categoryRepository.findAll().map {
+    fun findAll(marketId: Long): List<CategoryDTO> {
+        return customCategoryRepository.findCategories(marketId).map {
             CategoryDTO(
                 localId = it.localId!!,
                 name = it.name,
-                companyId = it.company?.id,
+                marketId = it.market?.id,
                 active = it.active,
                 id = it.id
             )

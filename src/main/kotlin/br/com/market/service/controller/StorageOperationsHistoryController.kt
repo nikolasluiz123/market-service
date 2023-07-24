@@ -39,8 +39,8 @@ class StorageOperationsHistoryController(private val service: StorageOperationsH
 
     @GetMapping
     @Transactional(timeout = 600)
-    fun findAllStorageOperationsHistoryDTOs(): ResponseEntity<ReadResponse<StorageOperationHistoryDTO>> {
-        val values = service.findAllStorageOperationsHistoryDTOs()
+    fun findAllStorageOperationsHistoryDTOs(@RequestParam marketId: Long): ResponseEntity<ReadResponse<StorageOperationHistoryDTO>> {
+        val values = service.findAllStorageOperationsHistoryDTOs(marketId)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }
