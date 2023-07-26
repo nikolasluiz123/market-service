@@ -63,7 +63,8 @@ class StorageOperationsHistoryService(
                 dateRealization = it.dateRealization,
                 operationType = it.operationType,
                 description = it.description,
-                userId = it.user?.localId
+                userId = it.user?.localId,
+                marketId = it.market?.id
             )
         }
     }
