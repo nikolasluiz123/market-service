@@ -6,6 +6,6 @@ interface ICustomStorageOperationsHistoryRepository {
 
     fun findStorageOperationHistoryByLocalId(localId: String): StorageOperationHistory?
 
-    fun findAll(marketId: Long): List<StorageOperationHistory>
+    fun findAll(marketId: Long, limit: Int? = null, offset: Int? = null): List<StorageOperationHistory>
 
 }

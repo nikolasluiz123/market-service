@@ -54,15 +54,23 @@ class ProductController(private val service: ProductService) {
 
     @GetMapping
     @Transactional(timeout = 600)
-    fun findAllProductDTOs(@RequestParam marketId: Long): ResponseEntity<ReadResponse<ProductDTO>> {
-        val values = service.findAllProductDTOs(marketId)
+    fun findProductDTOs(
+        @RequestParam marketId: Long,
+        @RequestParam limit: Int? = null,
+        @RequestParam offset: Int? = null
+    ): ResponseEntity<ReadResponse<ProductDTO>> {
+        val values = service.findAllProductDTOs(marketId, limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 
     @GetMapping("/images")
     @Transactional(timeout = 600)
-    fun findAllProductImageDTOs(@RequestParam marketId: Long): ResponseEntity<ReadResponse<ProductImageDTO>> {
-        val values = service.findAllProductImageDTOs(marketId)
+    fun findProductImageDTOs(
+        @RequestParam marketId: Long,
+        @RequestParam limit: Int? = null,
+        @RequestParam offset: Int? = null
+    ): ResponseEntity<ReadResponse<ProductImageDTO>> {
+        val values = service.findProductImageDTOs(marketId, limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }

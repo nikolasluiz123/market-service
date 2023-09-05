@@ -37,7 +37,7 @@ class CustomBrandRepositoryImpl : ICustomBrandRepository {
         }
     }
 
-    override fun findBrands(marketId: Long): List<Brand> {
+    override fun findBrands(marketId: Long, limit: Int?, offset: Int?): List<Brand> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
@@ -51,6 +51,8 @@ class CustomBrandRepositoryImpl : ICustomBrandRepository {
 
         val query = entityManager.createQuery(sql.toString(), Brand::class.java)
         query.setParameters(params)
+        query.maxResults = limit ?: Int.MAX_VALUE
+        query.firstResult = offset ?: 0
 
         return query.resultList
     }

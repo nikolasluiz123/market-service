@@ -37,7 +37,7 @@ class CustomStorageOperationsHistoryRepositoryImpl: ICustomStorageOperationsHist
         }
     }
 
-    override fun findAll(marketId: Long): List<StorageOperationHistory> {
+    override fun findAll(marketId: Long, limit: Int?, offset: Int?): List<StorageOperationHistory> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
@@ -51,6 +51,8 @@ class CustomStorageOperationsHistoryRepositoryImpl: ICustomStorageOperationsHist
 
         val query = entityManager.createQuery(sql.toString(), StorageOperationHistory::class.java)
         query.setParameters(params)
+        query.maxResults = limit ?: Int.MAX_VALUE
+        query.firstResult = offset ?: 0
 
         return query.resultList
     }

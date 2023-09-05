@@ -62,8 +62,8 @@ class BrandService(
         brandBodyDTOs.forEach(::save)
     }
 
-    fun findAllBrandDTOs(marketId: Long): List<BrandDTO> {
-        return customBrandRepository.findBrands(marketId).map {
+    fun findAllBrandDTOs(marketId: Long, limit: Int? = null, offset: Int? = null): List<BrandDTO> {
+        return customBrandRepository.findBrands(marketId, limit, offset).map {
             BrandDTO(
                 localId = it.localId!!,
                 name = it.name,
@@ -74,8 +74,8 @@ class BrandService(
         }
     }
 
-    fun findAllCategoryBrandDTOs(marketId: Long): List<CategoryBrandDTO> {
-        return customCategoryBrandRepository.findCategoryBrands(marketId).map {
+    fun findCategoryBrandDTOs(marketId: Long, limit: Int? = null, offset: Int? = null): List<CategoryBrandDTO> {
+        return customCategoryBrandRepository.findCategoryBrands(marketId, limit, offset).map {
             CategoryBrandDTO(
                 localId = it.localId!!,
                 marketId = it.market?.id,

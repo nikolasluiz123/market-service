@@ -98,7 +98,7 @@ class CustomProductImageRepositoryImpl : ICustomProductImageRepository {
         query.executeUpdate()
     }
 
-    override fun findAll(marketId: Long): List<ProductImage> {
+    override fun findAll(marketId: Long, limit: Int?, offset: Int?): List<ProductImage> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
@@ -112,6 +112,8 @@ class CustomProductImageRepositoryImpl : ICustomProductImageRepository {
 
         val query = entityManager.createQuery(sql.toString(), ProductImage::class.java)
         query.setParameters(params)
+        query.maxResults = limit ?: Int.MAX_VALUE
+        query.firstResult = offset ?: 0
 
         return query.resultList
     }

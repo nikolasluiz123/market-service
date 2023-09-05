@@ -37,7 +37,7 @@ class CustomUserRepositoryImpl: ICustomUserRepository {
         }
     }
 
-    override fun findAll(marketId: Long): List<User> {
+    override fun findAll(marketId: Long, limit: Int?, offset: Int?): List<User> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
@@ -51,6 +51,8 @@ class CustomUserRepositoryImpl: ICustomUserRepository {
 
         val query = entityManager.createQuery(sql.toString(), User::class.java)
         query.setParameters(params)
+        query.maxResults = limit ?: Int.MAX_VALUE
+        query.firstResult = offset ?: 0
 
         return query.resultList
     }

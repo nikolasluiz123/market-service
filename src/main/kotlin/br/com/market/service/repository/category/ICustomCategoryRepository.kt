@@ -6,5 +6,5 @@ interface ICustomCategoryRepository {
 
     fun findCategoryByLocalId(localId: String): Category?
 
-    fun findCategories(marketId: Long): List<Category>
+    fun findCategories(marketId: Long, limit: Int? = null, offset: Int? = null): List<Category>
 }

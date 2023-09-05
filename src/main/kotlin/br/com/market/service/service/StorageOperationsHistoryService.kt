@@ -51,8 +51,8 @@ class StorageOperationsHistoryService(
         storageOperationHistoryDTOS.forEach(::save)
     }
 
-    fun findAllStorageOperationsHistoryDTOs(marketId: Long): List<StorageOperationHistoryDTO> {
-        return customStorageOperationsHistoryRepository.findAll(marketId).map {
+    fun findStorageOperationsHistoryDTOs(marketId: Long, limit: Int? = null, offset: Int? = null): List<StorageOperationHistoryDTO> {
+        return customStorageOperationsHistoryRepository.findAll(marketId, limit, offset).map {
             StorageOperationHistoryDTO(
                 localId = it.localId!!,
                 id = it.id,

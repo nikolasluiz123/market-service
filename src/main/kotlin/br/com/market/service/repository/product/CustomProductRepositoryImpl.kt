@@ -37,7 +37,7 @@ class CustomProductRepositoryImpl : ICustomProductRepository {
         }
     }
 
-    override fun findAll(marketId: Long): List<Product> {
+    override fun findAll(marketId: Long, limit: Int?, offset: Int?): List<Product> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
@@ -51,6 +51,8 @@ class CustomProductRepositoryImpl : ICustomProductRepository {
 
         val query = entityManager.createQuery(sql.toString(), Product::class.java)
         query.setParameters(params)
+        query.maxResults = limit ?: Int.MAX_VALUE
+        query.firstResult = offset ?: 0
 
         return query.resultList
     }

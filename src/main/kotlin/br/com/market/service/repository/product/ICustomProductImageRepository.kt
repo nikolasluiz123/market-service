@@ -11,5 +11,5 @@ interface ICustomProductImageRepository {
     fun toggleActiveProductImagesByProductLocalId(localProductId: String, active: Boolean)
 
     fun updateProductImagePrincipal(productId: Long, id: Long)
-    fun findAll(marketId: Long): List<ProductImage>
+    fun findAll(marketId: Long, limit: Int? = null, offset: Int? = null): List<ProductImage>
 }

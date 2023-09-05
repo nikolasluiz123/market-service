@@ -39,8 +39,12 @@ class CategoryController(private val service: CategoryService) {
 
     @GetMapping
     @Transactional(timeout = 600)
-    fun findAll(@RequestParam marketId: Long): ResponseEntity<ReadResponse<CategoryDTO>> {
-        val values = service.findAll(marketId)
+    fun findCategoryDTOs(
+        @RequestParam marketId: Long,
+        @RequestParam limit: Int? = null,
+        @RequestParam offset: Int? = null
+    ): ResponseEntity<ReadResponse<CategoryDTO>> {
+        val values = service.findCategoryDTO(marketId, limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }

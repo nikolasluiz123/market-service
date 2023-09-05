@@ -5,5 +5,5 @@ import br.com.market.service.models.CategoryBrand
 interface ICustomCategoryBrandRepository {
 
     fun findCategoryBrandByLocalId(localId: String): CategoryBrand?
-    fun findCategoryBrands(marketId: Long): List<CategoryBrand>
+    fun findCategoryBrands(marketId: Long, limit: Int? = null, offset: Int? = null): List<CategoryBrand>
 }

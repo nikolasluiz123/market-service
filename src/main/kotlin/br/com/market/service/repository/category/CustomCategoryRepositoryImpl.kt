@@ -37,7 +37,7 @@ class CustomCategoryRepositoryImpl: ICustomCategoryRepository{
         }
     }
 
-    override fun findCategories(marketId: Long): List<Category> {
+    override fun findCategories(marketId: Long, limit: Int?, offset: Int?): List<Category> {
         val params = mutableListOf<Parameter>()
         val sql = StringJoiner("\n\t")
 
@@ -51,6 +51,8 @@ class CustomCategoryRepositoryImpl: ICustomCategoryRepository{
 
         val query = entityManager.createQuery(sql.toString(), Category::class.java)
         query.setParameters(params)
+        query.maxResults = limit ?: Int.MAX_VALUE
+        query.firstResult = offset ?: 0
 
         return query.resultList
     }

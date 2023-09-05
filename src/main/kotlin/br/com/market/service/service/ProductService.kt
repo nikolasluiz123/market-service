@@ -107,8 +107,8 @@ class ProductService(
         productBodyDTOs.forEach(::saveProduct)
     }
 
-    fun findAllProductDTOs(marketId: Long): List<ProductDTO> {
-        return customProductRepository.findAll(marketId).map {
+    fun findAllProductDTOs(marketId: Long, limit: Int? = null, offset: Int? = null): List<ProductDTO> {
+        return customProductRepository.findAll(marketId, limit, offset).map {
             ProductDTO(
                 id = it.id!!,
                 active = it.active,
@@ -123,8 +123,8 @@ class ProductService(
         }
     }
 
-    fun findAllProductImageDTOs(marketId: Long): List<ProductImageDTO> {
-        return customProductImageRepository.findAll(marketId).map {
+    fun findProductImageDTOs(marketId: Long, limit: Int? = null, offset: Int? = null): List<ProductImageDTO> {
+        return customProductImageRepository.findAll(marketId, limit, offset).map {
             ProductImageDTO(
                 id = it.id,
                 localId = it.localId!!,

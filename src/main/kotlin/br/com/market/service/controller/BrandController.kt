@@ -38,15 +38,23 @@ class BrandController(private val service: BrandService) {
 
     @GetMapping
     @Transactional(timeout = 600)
-    fun findAllBrandDTOs(@RequestParam marketId: Long): ResponseEntity<ReadResponse<BrandDTO>> {
-        val values = service.findAllBrandDTOs(marketId)
+    fun findBrandDTOs(
+        @RequestParam marketId: Long,
+        @RequestParam limit: Int? = null,
+        @RequestParam offset: Int? = null
+    ): ResponseEntity<ReadResponse<BrandDTO>> {
+        val values = service.findAllBrandDTOs(marketId, limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 
     @GetMapping("/categoryBrand")
     @Transactional(timeout = 600)
-    fun findAllCategoryBrandDTOs(@RequestParam marketId: Long): ResponseEntity<ReadResponse<CategoryBrandDTO>> {
-        val values = service.findAllCategoryBrandDTOs(marketId)
+    fun findCategoryBrandDTOs(
+        @RequestParam marketId: Long,
+        @RequestParam limit: Int? = null,
+        @RequestParam offset: Int? = null
+    ): ResponseEntity<ReadResponse<CategoryBrandDTO>> {
+        val values = service.findCategoryBrandDTOs(marketId, limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }

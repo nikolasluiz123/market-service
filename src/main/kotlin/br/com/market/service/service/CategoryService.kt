@@ -39,8 +39,8 @@ class CategoryService(
         categoriesDTOs.forEach(::save)
     }
 
-    fun findAll(marketId: Long): List<CategoryDTO> {
-        return customCategoryRepository.findCategories(marketId).map {
+    fun findCategoryDTO(marketId: Long, limit: Int? = null, offset: Int? = null): List<CategoryDTO> {
+        return customCategoryRepository.findCategories(marketId, limit, offset).map {
             CategoryDTO(
                 localId = it.localId!!,
                 name = it.name,

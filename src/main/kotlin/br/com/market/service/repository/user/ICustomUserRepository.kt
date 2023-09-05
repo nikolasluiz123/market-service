@@ -6,5 +6,5 @@ interface ICustomUserRepository {
 
     fun findUserByLocalId(localId: String): User?
 
-    fun findAll(marketId: Long): List<User>
+    fun findAll(marketId: Long, limit: Int? = null, offset: Int? = null): List<User>
 }
