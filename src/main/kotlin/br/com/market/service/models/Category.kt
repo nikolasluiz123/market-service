@@ -1,6 +1,6 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileMarketModel
+import br.com.market.service.models.base.MobileMarketRestrictionModel
 import jakarta.persistence.*
 
 /**
@@ -18,4 +18,4 @@ data class Category(
     @Column(name = "local_id")
     override var localId: String? = null,
     var name: String? = null
-) : MobileMarketModel()
+) : MobileMarketRestrictionModel()

@@ -1,6 +1,6 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileMarketModel
+import br.com.market.service.models.base.MobileMarketRestrictionModel
 import br.com.market.service.models.enumeration.EnumUnit
 import jakarta.persistence.*
 
@@ -23,4 +23,4 @@ data class VehicleCapacity(
     var capacityUnit: EnumUnit? = null,
     @ManyToOne @JoinColumn(name = "vehicle_id")
     var vehicle: Vehicle? = null
-) : MobileMarketModel()
+) : MobileMarketRestrictionModel()

@@ -1,6 +1,6 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileMarketModel
+import br.com.market.service.models.base.MobileMarketRestrictionModel
 import br.com.market.service.models.enumeration.EnumPaymentType
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -25,4 +25,4 @@ data class PurchaseCart(
     var delivery: Boolean = false,
     @ManyToOne @JoinColumn(name = "client_id")
     var client: Client? = null
-) : MobileMarketModel()
+) : MobileMarketRestrictionModel()

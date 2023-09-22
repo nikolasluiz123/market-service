@@ -1,7 +1,6 @@
-package br.com.market.service.dto.company
+package br.com.market.service.dto
 
 import br.com.market.service.dto.base.BaseDTO
-import br.com.market.service.dto.theme.ThemeDefinitionsDTO
 
 data class CompanyDTO(
     var name: String,

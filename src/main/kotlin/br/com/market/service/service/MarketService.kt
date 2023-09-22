@@ -1,7 +1,7 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.address.AddressDTO
-import br.com.market.service.dto.market.MarketDTO
+import br.com.market.service.dto.AddressDTO
+import br.com.market.service.dto.MarketDTO
 import br.com.market.service.models.Address
 import br.com.market.service.models.Market
 import br.com.market.service.repository.address.IAddressRepository

@@ -1,4 +1,4 @@
-package br.com.market.service.dto.brand
+package br.com.market.service.dto
 
 data class BrandBodyDTO(
     var brand: BrandDTO,

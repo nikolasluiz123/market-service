@@ -1,6 +1,6 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileMarketModel
+import br.com.market.service.models.base.MobileMarketRestrictionModel
 import jakarta.persistence.*
 
 /**
@@ -21,4 +21,4 @@ data class DeliveryMan(
     var user: User? = null,
     @ManyToOne @JoinColumn(name = "vehicle_id")
     var vehicle: Vehicle? = null
-): MobileMarketModel()
+): MobileMarketRestrictionModel()

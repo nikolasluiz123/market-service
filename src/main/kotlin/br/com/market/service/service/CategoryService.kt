@@ -1,6 +1,6 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.category.CategoryDTO
+import br.com.market.service.dto.CategoryDTO
 import br.com.market.service.models.Category
 import br.com.market.service.repository.category.ICategoryRepository
 import br.com.market.service.repository.category.ICustomCategoryRepository

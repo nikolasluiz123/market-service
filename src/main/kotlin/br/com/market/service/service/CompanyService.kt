@@ -1,7 +1,7 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.company.CompanyDTO
-import br.com.market.service.dto.theme.ThemeDefinitionsDTO
+import br.com.market.service.dto.CompanyDTO
+import br.com.market.service.dto.ThemeDefinitionsDTO
 import br.com.market.service.models.Company
 import br.com.market.service.models.ThemeDefinitions
 import br.com.market.service.repository.company.ICompanyRepository

@@ -1,7 +1,8 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.auth.AuthenticationRequestDTO
-import br.com.market.service.dto.auth.UserDTO
+import br.com.market.service.dto.AuthenticationRequestDTO
+import br.com.market.service.dto.UserDTO
+import br.com.market.service.exeption.BusinessException
 import br.com.market.service.models.User
 import br.com.market.service.repository.user.ICustomUserRepository
 import br.com.market.service.repository.user.IUserRepository
@@ -15,6 +16,7 @@ import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.regex.Pattern
 
 @Service
 class UserService(
@@ -25,12 +27,14 @@ class UserService(
     private val authenticationManager: AuthenticationManager
 ) {
 
-    fun register(registerRequest: UserDTO): AuthenticationResponse? {
+    fun register(userDTO: UserDTO): AuthenticationResponse {
+        validateUser(userDTO)
+
         val user = User(
-            localId = registerRequest.localId,
-            name = registerRequest.name,
-            email = registerRequest.email,
-            password = passwordEncoder.encode(registerRequest.password)
+            localId = userDTO.localId,
+            name = userDTO.name,
+            email = userDTO.email,
+            password = passwordEncoder.encode(userDTO.password)
         )
 
         val token = jwtService.generateToken(user)
@@ -38,6 +42,32 @@ class UserService(
         userRepository.save(user)
 
         return AuthenticationResponse(code = HttpStatus.OK.value(), token = token, success = true)
+    }
+
+    @Throws(BusinessException::class)
+    private fun validateUser(dto: UserDTO) {
+        val emailPattern = Pattern.compile(
+            "[a-zA-Z0-9+._%\\-]{1,256}" +
+                    "@" +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "(" +
+                    "\\." +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                    ")+"
+        )
+
+        when {
+            dto.name.isEmpty() -> throw BusinessException("O nome é obrigatório.")
+            dto.name.length > 255 -> throw BusinessException("O nome deve conter menos de 255 caractéres.")
+
+            dto.email.isEmpty() -> throw BusinessException("O e-mail é obrigatório.")
+            dto.email.length > 255 -> throw BusinessException("O e-mail deve conter menos de 255 caractéres.")
+            !emailPattern.matcher(dto.email).matches() -> throw BusinessException("O e-mail é inválido.")
+            !customUserRepository.isUniqueEmail(dto.email) -> throw BusinessException("E-mail já cadastrado.")
+
+            dto.password.isEmpty() -> throw BusinessException("A senha é obrigatória.")
+            dto.password.length > 255 -> throw BusinessException("A senha deve conter menos de 255 caractéres.")
+        }
     }
 
     fun authenticate(authenticateRequest: AuthenticationRequestDTO): AuthenticationResponse? {

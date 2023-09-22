@@ -1,6 +1,6 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileMarketModel
+import br.com.market.service.models.base.MobileMarketRestrictionModel
 import jakarta.persistence.*
 
 /**
@@ -21,4 +21,4 @@ data class DeliveryManQueue(
     var deliveryStarted: Boolean = false,
     @OneToOne @JoinColumn(name = "purchase_cart_id")
     var purchaseCart: PurchaseCart? = null
-): MobileMarketModel()
+): MobileMarketRestrictionModel()

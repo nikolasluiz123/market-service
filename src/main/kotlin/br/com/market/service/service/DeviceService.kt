@@ -1,6 +1,6 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.device.DeviceDTO
+import br.com.market.service.dto.DeviceDTO
 import br.com.market.service.models.Device
 import br.com.market.service.repository.device.IDeviceRepository
 import br.com.market.service.repository.market.IMarketRepository

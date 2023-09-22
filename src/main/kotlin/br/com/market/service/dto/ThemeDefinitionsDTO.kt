@@ -1,4 +1,4 @@
-package br.com.market.service.dto.theme
+package br.com.market.service.dto
 
 import br.com.market.service.dto.base.BaseDTO
 

@@ -21,5 +21,6 @@ data class Address(
     var publicPlace: String? = null,
     var number: String? = null,
     var complement: String? = null,
+    @Column(length = 9)
     var cep: String? = null
 ) : BaseModel()

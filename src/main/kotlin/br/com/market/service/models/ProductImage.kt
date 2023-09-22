@@ -1,6 +1,6 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileMarketModel
+import br.com.market.service.models.base.MobileMarketRestrictionModel
 import jakarta.persistence.*
 
 /**
@@ -22,7 +22,7 @@ data class ProductImage(
     @ManyToOne @JoinColumn(name = "product_id")
     var product: Product? = null,
     var principal: Boolean? = false
-) : MobileMarketModel() {
+) : MobileMarketRestrictionModel() {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

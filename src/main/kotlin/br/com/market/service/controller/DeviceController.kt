@@ -1,6 +1,6 @@
 package br.com.market.service.controller
 
-import br.com.market.service.dto.device.DeviceDTO
+import br.com.market.service.dto.DeviceDTO
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
 import br.com.market.service.service.DeviceService

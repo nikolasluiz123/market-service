@@ -1,6 +1,6 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileMarketModel
+import br.com.market.service.models.base.MobileMarketRestrictionModel
 import br.com.market.service.models.enumeration.EnumVehicleType
 import jakarta.persistence.*
 
@@ -19,4 +19,4 @@ data class Vehicle(
     @Column(name = "local_id")
     override var localId: String?,
     var type: EnumVehicleType? = null,
-): MobileMarketModel()
+): MobileMarketRestrictionModel()

@@ -1,6 +1,6 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileMarketModel
+import br.com.market.service.models.base.MobileMarketRestrictionModel
 import jakarta.persistence.*
 
 /**
@@ -22,4 +22,4 @@ data class CategoryBrand(
     var category: Category? = null,
     @ManyToOne @JoinColumn(name = "brand_id")
     var brand: Brand? = null
-) : MobileMarketModel()
+) : MobileMarketRestrictionModel()

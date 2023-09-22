@@ -1,4 +1,4 @@
-package br.com.market.service.dto.device
+package br.com.market.service.dto
 
 data class DeviceDTO(
     var id: String? = null,

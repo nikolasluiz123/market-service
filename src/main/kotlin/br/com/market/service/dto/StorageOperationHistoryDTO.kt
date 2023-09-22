@@ -1,4 +1,4 @@
-package br.com.market.service.dto.storageoperationhistory
+package br.com.market.service.dto
 
 import br.com.market.service.dto.base.MobileDTO
 import br.com.market.service.models.enumeration.EnumOperationType

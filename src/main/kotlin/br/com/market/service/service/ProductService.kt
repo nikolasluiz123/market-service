@@ -1,8 +1,8 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.product.ProductBodyDTO
-import br.com.market.service.dto.product.ProductDTO
-import br.com.market.service.dto.product.ProductImageDTO
+import br.com.market.service.dto.ProductBodyDTO
+import br.com.market.service.dto.ProductDTO
+import br.com.market.service.dto.ProductImageDTO
 import br.com.market.service.models.Product
 import br.com.market.service.models.ProductImage
 import br.com.market.service.repository.brand.ICustomCategoryBrandRepository

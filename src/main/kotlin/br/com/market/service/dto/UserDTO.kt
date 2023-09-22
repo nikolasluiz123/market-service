@@ -1,4 +1,4 @@
-package br.com.market.service.dto.auth
+package br.com.market.service.dto
 
 import br.com.market.service.dto.base.MobileDTO
 

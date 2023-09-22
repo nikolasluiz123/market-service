@@ -1,6 +1,6 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileMarketModel
+import br.com.market.service.models.base.MobileMarketRestrictionModel
 import jakarta.persistence.*
 
 /**
@@ -22,4 +22,4 @@ data class CartItem(
     var product: Product? = null,
     @ManyToOne @JoinColumn(name = "purchase_cart_id")
     var purchaseCart: PurchaseCart
-): MobileMarketModel()
+): MobileMarketRestrictionModel()

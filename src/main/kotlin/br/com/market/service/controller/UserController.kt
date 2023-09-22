@@ -1,7 +1,7 @@
 package br.com.market.service.controller
 
-import br.com.market.service.dto.auth.AuthenticationRequestDTO
-import br.com.market.service.dto.auth.UserDTO
+import br.com.market.service.dto.AuthenticationRequestDTO
+import br.com.market.service.dto.UserDTO
 import br.com.market.service.response.AuthenticationResponse
 import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.ReadResponse

@@ -6,6 +6,6 @@ package br.com.market.service.models.base
  *
  * @author Nikolas Luiz Schmitt
  */
-abstract class MobileMarketModel : MarketModel() {
+abstract class MobileMarketRestrictionModel : MarketModel() {
     abstract var localId: String?
 }

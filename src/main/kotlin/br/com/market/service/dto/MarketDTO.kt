@@ -1,6 +1,5 @@
-package br.com.market.service.dto.market
+package br.com.market.service.dto
 
-import br.com.market.service.dto.address.AddressDTO
 import br.com.market.service.dto.base.BaseDTO
 
 data class MarketDTO(

@@ -56,4 +56,28 @@ class CustomUserRepositoryImpl: ICustomUserRepository {
 
         return query.resultList
     }
+
+    override fun isUniqueEmail(email: String): Boolean {
+        val params = mutableListOf<Parameter>()
+        val sql = StringJoiner("\n\t")
+
+        with(sql) {
+            add(" SELECT EXISTS ( ")
+            add("                   SELECT 1 ")
+            add("                   FROM ${User::class.java.name} u ")
+            add("                   WHERE u.email = :pEmail ")
+            add("               )  as unique")
+        }
+
+        params.add(Parameter(name = "pEmail", value = email))
+
+        val query = entityManager.createQuery(sql.toString(), Boolean::class.java)
+        query.setParameters(params)
+
+        return try {
+            !query.singleResult
+        } catch (e: NoResultException) {
+            return true
+        }
+    }
 }

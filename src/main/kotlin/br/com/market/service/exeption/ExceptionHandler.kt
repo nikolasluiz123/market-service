@@ -35,4 +35,13 @@ class ExceptionHandler {
             error = exception.message
         )
     }
+
+    @ExceptionHandler(BusinessException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handlerValidationExceptions(exception: BusinessException): PersistenceResponse {
+        return PersistenceResponse(
+            code = HttpStatus.BAD_REQUEST.value(),
+            error = exception.message
+        )
+    }
 }

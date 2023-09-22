@@ -1,8 +1,8 @@
 package br.com.market.service.controller
 
-import br.com.market.service.dto.product.ProductBodyDTO
-import br.com.market.service.dto.product.ProductDTO
-import br.com.market.service.dto.product.ProductImageDTO
+import br.com.market.service.dto.ProductBodyDTO
+import br.com.market.service.dto.ProductDTO
+import br.com.market.service.dto.ProductImageDTO
 import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse

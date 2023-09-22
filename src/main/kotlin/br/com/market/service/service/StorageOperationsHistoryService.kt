@@ -1,6 +1,6 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.storageoperationhistory.StorageOperationHistoryDTO
+import br.com.market.service.dto.StorageOperationHistoryDTO
 import br.com.market.service.models.StorageOperationHistory
 import br.com.market.service.repository.market.IMarketRepository
 import br.com.market.service.repository.product.ICustomProductRepository

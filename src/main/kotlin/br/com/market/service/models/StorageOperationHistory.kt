@@ -1,6 +1,6 @@
 package br.com.market.service.models
 
-import br.com.market.service.models.base.MobileMarketModel
+import br.com.market.service.models.base.MobileMarketRestrictionModel
 import br.com.market.service.models.enumeration.EnumOperationType
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -31,4 +31,4 @@ data class StorageOperationHistory(
     var quantity: Int? = null,
     @ManyToOne @JoinColumn(name = "user_id")
     var user: User? = null
-): MobileMarketModel()
+): MobileMarketRestrictionModel()
