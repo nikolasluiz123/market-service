@@ -4,7 +4,7 @@ import br.com.market.service.dto.base.BaseDTO
 
 data class CompanyDTO(
     var name: String,
-    var themeDefinitionsDTO: ThemeDefinitionsDTO,
+    var themeDefinitions: ThemeDefinitionsDTO,
     override var id: Long? = null,
     override var active: Boolean = true
 ): BaseDTO()

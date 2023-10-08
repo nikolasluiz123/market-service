@@ -1,6 +1,7 @@
 package br.com.market.service.controller
 
 import br.com.market.service.dto.ProductBodyDTO
+import br.com.market.service.dto.ProductClientDTO
 import br.com.market.service.dto.ProductDTO
 import br.com.market.service.dto.ProductImageDTO
 import br.com.market.service.response.MarketServiceResponse
@@ -71,6 +72,13 @@ class ProductController(private val service: ProductService) {
         @RequestParam offset: Int? = null
     ): ResponseEntity<ReadResponse<ProductImageDTO>> {
         val values = service.findProductImageDTOs(marketId, limit, offset)
+        return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
+    }
+
+    @GetMapping("/client")
+    @Transactional
+    fun findProducts(@RequestParam limit: Int, @RequestParam offset: Int): ResponseEntity<ReadResponse<ProductClientDTO>> {
+        val values = service.findProducts(limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }

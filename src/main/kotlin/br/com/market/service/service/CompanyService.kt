@@ -20,7 +20,7 @@ class CompanyService(
     fun save(companyDTO: CompanyDTO) {
         lateinit var theme: ThemeDefinitions
 
-        with(companyDTO.themeDefinitionsDTO) {
+        with(companyDTO.themeDefinitions) {
             theme = if (id != null) {
                 themeDefinitionsRepository.findById(id!!).get()
             } else {
@@ -46,7 +46,7 @@ class CompanyService(
             CompanyDTO(
                 id = it.id,
                 name = it.name,
-                themeDefinitionsDTO = ThemeDefinitionsDTO(
+                themeDefinitions = ThemeDefinitionsDTO(
                     id = it.themeDefinitions?.id,
                     colorPrimary = it.themeDefinitions?.colorPrimary!!,
                     colorSecondary = it.themeDefinitions?.colorSecondary!!,
@@ -72,7 +72,7 @@ class CompanyService(
             CompanyDTO(
                 id = id,
                 name = name,
-                themeDefinitionsDTO = ThemeDefinitionsDTO(
+                themeDefinitions = ThemeDefinitionsDTO(
                     id = themeDefinitions?.id,
                     colorPrimary = themeDefinitions?.colorPrimary!!,
                     colorSecondary = themeDefinitions?.colorSecondary!!,

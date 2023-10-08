@@ -1,6 +1,7 @@
 package br.com.market.service.service
 
 import br.com.market.service.dto.ProductBodyDTO
+import br.com.market.service.dto.ProductClientDTO
 import br.com.market.service.dto.ProductDTO
 import br.com.market.service.dto.ProductImageDTO
 import br.com.market.service.models.Product
@@ -136,5 +137,9 @@ class ProductService(
                 marketId = it.market?.id!!
             )
         }
+    }
+
+    fun findProducts(limit: Int, offset: Int): List<ProductClientDTO> {
+        return customProductRepository.findProducts(limit, offset)
     }
 }

@@ -15,7 +15,7 @@ data class Market(
     override var active: Boolean = true,
     @ManyToOne @JoinColumn(name = "company_id")
     var company: Company? = null,
-    @OneToOne @JoinColumn(name = "addres_id")
+    @OneToOne @JoinColumn(name = "address_id")
     var address: Address? = null,
     var name: String? = null
 ) : BaseModel()
