@@ -1,6 +1,7 @@
 package br.com.market.service.controller
 
 import br.com.market.service.dto.MarketDTO
+import br.com.market.service.dto.MarketReadDTO
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
 import br.com.market.service.service.MarketService
@@ -14,10 +15,15 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/market")
 class MarketController(private val service: MarketService) {
 
-    @GetMapping
+    @GetMapping("/lov")
     @Transactional(timeout = 600)
-    fun findAll(): ResponseEntity<ReadResponse<MarketDTO>> {
-        val values = service.findAll()
+    fun getListLovMarketReadSDO(
+        @RequestParam simpleFilter: String?,
+        @RequestParam marketId: Long,
+        @RequestParam limit: Int,
+        @RequestParam offset: Int
+    ): ResponseEntity<ReadResponse<MarketReadDTO>> {
+        val values = service.getListLovMarketReadSDO(simpleFilter, marketId, limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 

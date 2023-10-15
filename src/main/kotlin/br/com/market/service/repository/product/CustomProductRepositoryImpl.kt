@@ -61,7 +61,7 @@ class CustomProductRepositoryImpl : ICustomProductRepository {
         return query.resultList
     }
 
-    override fun findProducts(limit: Int, offset: Int): List<ProductClientDTO> {
+    override fun findProducts(simpleFilter: String?, limit: Int, offset: Int): List<ProductClientDTO> {
         val params = mutableListOf<Parameter>()
         val select = StringJoiner("\n\t")
 
@@ -124,6 +124,11 @@ class CustomProductRepositoryImpl : ICustomProductRepository {
         with(where) {
             add(" where p.active ")
             add(" and image.active ")
+
+            if (!simpleFilter.isNullOrEmpty()) {
+                add(" and p.name like :pSimpleFilter ")
+                params.add(Parameter("pSimpleFilter", "%${simpleFilter}%"))
+            }
         }
 
         val orderBy = StringJoiner("\n\t")

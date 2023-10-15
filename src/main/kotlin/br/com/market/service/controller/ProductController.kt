@@ -77,8 +77,8 @@ class ProductController(private val service: ProductService) {
 
     @GetMapping("/client")
     @Transactional
-    fun findProducts(@RequestParam limit: Int, @RequestParam offset: Int): ResponseEntity<ReadResponse<ProductClientDTO>> {
-        val values = service.findProducts(limit, offset)
+    fun findProducts(@RequestParam simpleFilter: String?, @RequestParam limit: Int, @RequestParam offset: Int): ResponseEntity<ReadResponse<ProductClientDTO>> {
+        val values = service.findProducts(simpleFilter, limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }

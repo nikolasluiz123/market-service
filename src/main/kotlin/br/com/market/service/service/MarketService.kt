@@ -2,6 +2,7 @@ package br.com.market.service.service
 
 import br.com.market.service.dto.AddressDTO
 import br.com.market.service.dto.MarketDTO
+import br.com.market.service.dto.MarketReadDTO
 import br.com.market.service.models.Address
 import br.com.market.service.models.Market
 import br.com.market.service.repository.address.IAddressRepository
@@ -108,5 +109,9 @@ class MarketService(
                 )
             )
         }
+    }
+
+    fun getListLovMarketReadSDO(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): List<MarketReadDTO> {
+        return customMarketRepository.getListLovMarketReadDTO(simpleFilter, marketId, limit, offset)
     }
 }

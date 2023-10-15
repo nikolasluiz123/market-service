@@ -8,6 +8,6 @@ interface ICustomProductRepository {
     fun findProductByLocalId(localId: String): Product?
     fun findAll(marketId: Long, limit: Int? = null, offset: Int? = null): List<Product>
 
-    fun findProducts(limit: Int, offset: Int): List<ProductClientDTO>
+    fun findProducts(simpleFilter: String?, limit: Int, offset: Int): List<ProductClientDTO>
 
 }

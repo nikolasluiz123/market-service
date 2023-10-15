@@ -1,7 +1,7 @@
 package br.com.market.service.controller
 
 import br.com.market.service.dto.BrandBodyDTO
-import br.com.market.service.dto.BrandDTO
+import br.com.market.service.dto.BrandReadDTO
 import br.com.market.service.dto.CategoryBrandDTO
 import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.PersistenceResponse
@@ -38,25 +38,37 @@ class BrandController(private val service: BrandService) {
         return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
-    @GetMapping
+//    @GetMapping
+//    @Transactional(timeout = 600)
+//    fun findBrandDTOs(
+//        @RequestParam marketId: Long,
+//        @RequestParam limit: Int? = null,
+//        @RequestParam offset: Int? = null
+//    ): ResponseEntity<ReadResponse<BrandDTO>> {
+//        val values = service.findAllBrandDTOs(marketId, limit, offset)
+//        return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
+//    }
+
+    @GetMapping("/lov")
     @Transactional(timeout = 600)
-    fun findBrandDTOs(
+    fun getListLovBrandReadDTO(
+        @RequestParam simpleFilter: String?,
         @RequestParam marketId: Long,
-        @RequestParam limit: Int? = null,
-        @RequestParam offset: Int? = null
-    ): ResponseEntity<ReadResponse<BrandDTO>> {
-        val values = service.findAllBrandDTOs(marketId, limit, offset)
+        @RequestParam limit: Int,
+        @RequestParam offset: Int
+    ): ResponseEntity<ReadResponse<BrandReadDTO>> {
+        val values = service.getListLovBrandReadDTO(simpleFilter, marketId, limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 
-    @GetMapping("/categoryBrand")
-    @Transactional(timeout = 600)
-    fun findCategoryBrandDTOs(
-        @RequestParam marketId: Long,
-        @RequestParam limit: Int? = null,
-        @RequestParam offset: Int? = null
-    ): ResponseEntity<ReadResponse<CategoryBrandDTO>> {
-        val values = service.findCategoryBrandDTOs(marketId, limit, offset)
-        return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
-    }
+//    @GetMapping("/categoryBrand")
+//    @Transactional(timeout = 600)
+//    fun findCategoryBrandDTOs(
+//        @RequestParam marketId: Long,
+//        @RequestParam limit: Int? = null,
+//        @RequestParam offset: Int? = null
+//    ): ResponseEntity<ReadResponse<CategoryBrandDTO>> {
+//        val values = service.findCategoryBrandDTOs(marketId, limit, offset)
+//        return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
+//    }
 }

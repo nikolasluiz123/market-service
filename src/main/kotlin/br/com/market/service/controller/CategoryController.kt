@@ -1,6 +1,7 @@
 package br.com.market.service.controller
 
 import br.com.market.service.dto.CategoryDTO
+import br.com.market.service.dto.CategoryReadDTO
 import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
@@ -37,14 +38,15 @@ class CategoryController(private val service: CategoryService) {
         return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
-    @GetMapping
+    @GetMapping("/lov")
     @Transactional(timeout = 600)
-    fun findCategoryDTOs(
+    fun getListLovCategoryReadDTO(
+        @RequestParam simpleFilter: String,
         @RequestParam marketId: Long,
-        @RequestParam limit: Int? = null,
-        @RequestParam offset: Int? = null
-    ): ResponseEntity<ReadResponse<CategoryDTO>> {
-        val values = service.findCategoryDTO(marketId, limit, offset)
+        @RequestParam limit: Int,
+        @RequestParam offset: Int
+    ): ResponseEntity<ReadResponse<CategoryReadDTO>> {
+        val values = service.getListLovCategoryReadDTO(simpleFilter, marketId, limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }

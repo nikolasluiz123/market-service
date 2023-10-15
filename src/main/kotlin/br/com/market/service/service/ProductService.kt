@@ -139,7 +139,7 @@ class ProductService(
         }
     }
 
-    fun findProducts(limit: Int, offset: Int): List<ProductClientDTO> {
-        return customProductRepository.findProducts(limit, offset)
+    fun findProducts(simpleFilter: String?, limit: Int, offset: Int): List<ProductClientDTO> {
+        return customProductRepository.findProducts(simpleFilter, limit, offset)
     }
 }

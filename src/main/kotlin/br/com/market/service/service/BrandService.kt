@@ -2,6 +2,7 @@ package br.com.market.service.service
 
 import br.com.market.service.dto.BrandBodyDTO
 import br.com.market.service.dto.BrandDTO
+import br.com.market.service.dto.BrandReadDTO
 import br.com.market.service.dto.CategoryBrandDTO
 import br.com.market.service.models.Brand
 import br.com.market.service.models.CategoryBrand
@@ -85,5 +86,9 @@ class BrandService(
                 id = it.id
             )
         }
+    }
+
+    fun getListLovBrandReadDTO(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): List<BrandReadDTO> {
+        return customBrandRepository.getListLovBrandReadDTO(simpleFilter, marketId, limit, offset)
     }
 }
