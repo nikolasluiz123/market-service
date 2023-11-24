@@ -9,5 +9,7 @@ data class CategoryReadDTO(
     var name: String,
     var marketId: Long,
     var market: MarketDTO,
-    var company: CompanyDTO
+    var company: CompanyDTO,
+    var device: DeviceDTO,
+    var user: UserDTO
 ): MobileDTO()

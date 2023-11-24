@@ -67,7 +67,16 @@ class CustomCategoryRepositoryImpl : ICustomCategoryRepository {
             add("        theme.color_primary as themeColorPrimary, ")
             add("        theme.color_secondary as themeColorSecondary, ")
             add("        theme.color_tertiary as themeColorTertiary, ")
-            add("        theme.image_logo as themeLogo ")
+            add("        theme.image_logo as themeLogo, ")
+            add("        device.id as deviceId, ")
+            add("        device.active as deviceActive, ")
+            add("        device.name as deviceName, ")
+            add("        u.id as userId, ")
+            add("        u.name as userName, ")
+            add("        u.email as userEmail, ")
+            add("        u.password as userPassword, ")
+            add("        u.local_id as userLocalId, ")
+            add("        u.token as userToken ")
         }
 
         val from = StringJoiner("\n\t")
@@ -78,12 +87,17 @@ class CustomCategoryRepositoryImpl : ICustomCategoryRepository {
             add(" inner join addresses ad on ad.id = m.address_id ")
             add(" inner join companies comp on comp.id = m.company_id ")
             add(" inner join theme_definitions theme on theme.id = comp.theme_definitions_id ")
+            add(" inner join devices device on m.id = device.market_id ")
+            add(" inner join users u on u.market_id = m.id ")
         }
 
         val where = StringJoiner("\n\t")
 
         with(where) {
             add(" where c.active ")
+            add(" and m.id = :pMarketId ")
+
+            params.add(Parameter("pMarketId", marketId))
 
             if (!simpleFilter.isNullOrEmpty()) {
                 add(" and c.name like :pSimpleFilter ")
@@ -144,6 +158,21 @@ class CustomCategoryRepositoryImpl : ICustomCategoryRepository {
                         colorTertiary = tuple.get("themeColorTertiary", String::class.javaObjectType),
                         imageLogo = tuple.get("themeLogo", ByteArray::class.javaObjectType)
                     )
+                ),
+                device = DeviceDTO(
+                    id = tuple.get("deviceId", String::class.javaObjectType),
+                    active = tuple.get("deviceActive", Boolean::class.javaObjectType),
+                    name = tuple.get("deviceName", String::class.javaObjectType),
+                    marketId = tuple.get("marketId", Long::class.javaObjectType)
+                ),
+                user = UserDTO(
+                    id = tuple.get("userId", Long::class.javaObjectType),
+                    localId = tuple.get("userLocalId", String::class.javaObjectType),
+                    email = tuple.get("userEmail", String::class.javaObjectType),
+                    password = tuple.get("userPassword", String::class.javaObjectType),
+                    token = tuple.get("userToken", String::class.javaObjectType),
+                    name = tuple.get("userName", String::class.javaObjectType),
+                    marketId = tuple.get("marketId", Long::class.javaObjectType)
                 )
             )
         }
