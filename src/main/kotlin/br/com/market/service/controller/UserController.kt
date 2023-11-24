@@ -22,6 +22,12 @@ class UserController(private val service: UserService) {
         return ResponseEntity.ok(service.register(registerRequest))
     }
 
+    @PostMapping("/registerAll")
+    @Transactional(timeout = 600)
+    fun register(@RequestBody list: List<UserDTO>): ResponseEntity<AuthenticationResponse> {
+        return ResponseEntity.ok(service.registerAll(list))
+    }
+
     @PostMapping("/authenticate")
     @Transactional(timeout = 600)
     fun authenticate(@RequestBody authenticateRequest: AuthenticationRequestDTO): ResponseEntity<AuthenticationResponse> {

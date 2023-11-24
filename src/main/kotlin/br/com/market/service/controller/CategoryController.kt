@@ -38,10 +38,10 @@ class CategoryController(private val service: CategoryService) {
         return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
-    @GetMapping("/lov")
+    @GetMapping
     @Transactional(timeout = 600)
     fun getListLovCategoryReadDTO(
-        @RequestParam simpleFilter: String,
+        @RequestParam simpleFilter: String?,
         @RequestParam marketId: Long,
         @RequestParam limit: Int,
         @RequestParam offset: Int

@@ -23,6 +23,7 @@ class SecurityConfiguration(
             .csrf().disable()
             .authorizeHttpRequests()
             .requestMatchers("/api/v1/user/register").permitAll()
+            .requestMatchers("/api/v1/user/registerAll").permitAll()
             .requestMatchers("/api/v1/user/authenticate").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/v1/viacep/cep").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/v1/client/cpf").permitAll()

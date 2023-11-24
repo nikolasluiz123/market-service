@@ -48,6 +48,7 @@ class CustomCategoryRepositoryImpl : ICustomCategoryRepository {
             add(" select c.id as categoryId, ")
             add("        c.local_id as categoryLocalId, ")
             add("        c.name as categoryName, ")
+            add("        c.active as categoryActive, ")
             add("        m.id as marketId, ")
             add("        m.name as marketName, ")
             add("        m.company_id as marketCompanyId, ")
@@ -72,8 +73,7 @@ class CustomCategoryRepositoryImpl : ICustomCategoryRepository {
         val from = StringJoiner("\n\t")
 
         with(from) {
-            add(" from products p ")
-            add(" inner join categories c on c.id = cb.category_id ")
+            add(" from categories c ")
             add(" inner join markets m on m.id = c.market_id ")
             add(" inner join addresses ad on ad.id = m.address_id ")
             add(" inner join companies comp on comp.id = m.company_id ")
