@@ -74,8 +74,6 @@ class ClientService(
         }
 
         return PersistenceResponse(
-            idLocal = client?.localId,
-            idRemote = client?.id,
             code = HttpStatus.OK.value(),
             success = true
         )

@@ -30,17 +30,25 @@ class CategoryService(
         categoryRepository.save(category)
     }
 
-    fun toggleActive(categoryDTO: CategoryDTO) {
-        customCategoryRepository.findCategoryByLocalId(categoryDTO.localId)?.let {
+    fun toggleActive(id: String) {
+        customCategoryRepository.findCategoryByLocalId(id)?.let {
             categoryRepository.save(it.copy(active = !it.active))
         }
     }
 
-    fun sync(categoriesDTOs: List<CategoryDTO>) {
-        categoriesDTOs.forEach(::save)
-    }
-
     fun getListLovCategoryReadDTO(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): List<CategoryReadDTO> {
         return customCategoryRepository.getListLovCategoryReadDTO(simpleFilter, marketId, limit, offset)
+    }
+
+    fun findCategoryByLocalId(localId: String): CategoryDTO {
+        return customCategoryRepository.findCategoryByLocalId(localId)!!.run {
+            CategoryDTO(
+                id = id,
+                name = name,
+                marketId = market?.id!!,
+                localId = localId,
+                active = active
+            )
+        }
     }
 }

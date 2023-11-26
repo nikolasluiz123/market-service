@@ -2,9 +2,9 @@ package br.com.market.service.controller
 
 import br.com.market.service.dto.CategoryDTO
 import br.com.market.service.dto.CategoryReadDTO
-import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
+import br.com.market.service.response.SingleValueResponse
 import br.com.market.service.service.CategoryService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -24,18 +24,11 @@ class CategoryController(private val service: CategoryService) {
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
-    @PostMapping("/toggleActive")
+    @PostMapping("/toggleActive/{id}")
     @Transactional(timeout = 600)
-    fun toggleActive(@RequestBody @Valid categoryDTO: CategoryDTO): ResponseEntity<PersistenceResponse> {
-        service.toggleActive(categoryDTO)
+    fun toggleActive(@PathVariable id: String): ResponseEntity<PersistenceResponse> {
+        service.toggleActive(id)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
-    }
-
-    @PostMapping("/sync")
-    @Transactional(timeout = 6000)
-    fun sync(@RequestBody @Valid categoriesDTOs: List<CategoryDTO>): ResponseEntity<MarketServiceResponse> {
-        service.sync(categoriesDTOs)
-        return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @GetMapping
@@ -48,5 +41,12 @@ class CategoryController(private val service: CategoryService) {
     ): ResponseEntity<ReadResponse<CategoryReadDTO>> {
         val values = service.getListLovCategoryReadDTO(simpleFilter, marketId, limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
+    }
+
+    @GetMapping("/{id}")
+    @Transactional(timeout = 600)
+    fun findCategoryByLocalId(@PathVariable id: String): ResponseEntity<SingleValueResponse<CategoryDTO>> {
+        val value = service.findCategoryByLocalId(id)
+        return ResponseEntity.ok(SingleValueResponse(value = value, code = HttpStatus.OK.value(), success = true))
     }
 }
