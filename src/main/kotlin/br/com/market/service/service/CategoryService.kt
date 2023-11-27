@@ -1,7 +1,6 @@
 package br.com.market.service.service
 
 import br.com.market.service.dto.CategoryDTO
-import br.com.market.service.dto.CategoryReadDTO
 import br.com.market.service.models.Category
 import br.com.market.service.repository.category.ICategoryRepository
 import br.com.market.service.repository.category.ICustomCategoryRepository
@@ -36,8 +35,8 @@ class CategoryService(
         }
     }
 
-    fun getListLovCategoryReadDTO(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): List<CategoryReadDTO> {
-        return customCategoryRepository.getListLovCategoryReadDTO(simpleFilter, marketId, limit, offset)
+    fun getListCategory(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): List<CategoryDTO> {
+        return customCategoryRepository.getListCategory(simpleFilter, marketId, limit, offset)
     }
 
     fun findCategoryByLocalId(localId: String): CategoryDTO {
