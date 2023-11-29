@@ -1,6 +1,6 @@
 package br.com.market.service.dto
 
-data class BrandBodyDTO(
+data class BrandAndReferencesDTO(
     var brand: BrandDTO,
     var categoryBrand: CategoryBrandDTO
 )

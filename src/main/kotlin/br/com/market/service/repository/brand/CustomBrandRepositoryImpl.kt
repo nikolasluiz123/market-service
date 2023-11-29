@@ -1,6 +1,8 @@
 package br.com.market.service.repository.brand
 
-import br.com.market.service.dto.*
+import br.com.market.service.dto.BrandAndReferencesDTO
+import br.com.market.service.dto.BrandDTO
+import br.com.market.service.dto.CategoryBrandDTO
 import br.com.market.service.extensions.getResultList
 import br.com.market.service.extensions.setParameters
 import br.com.market.service.models.Brand
@@ -61,7 +63,7 @@ class CustomBrandRepositoryImpl : ICustomBrandRepository {
         return query.resultList
     }
 
-    override fun getListLovBrandReadDTO(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): List<BrandReadDTO> {
+    override fun getListBrand(simpleFilter: String?, categoryLocalId: String?, marketId: Long, limit: Int, offset: Int): List<BrandAndReferencesDTO> {
         val params = mutableListOf<Parameter>()
 
         val select = StringJoiner("\n\t")
@@ -70,31 +72,12 @@ class CustomBrandRepositoryImpl : ICustomBrandRepository {
             add("        b.local_id as brandLocalId, ")
             add("        b.name as brandName, ")
             add("        b.active as brandActive, ")
-            add("        c.id as categoryId, ")
             add("        b.local_id as categoryLocalId, ")
-            add("        c.name as categoryName, ")
-            add("        c.active as categoryActive, ")
+            add("        b.market_id as brandMarketId, ")
             add("        cb.id as categoryBrandId, ")
             add("        cb.local_id as categoryBrandLocalId, ")
-            add("        m.id as marketId, ")
-            add("        m.name as marketName, ")
-            add("        m.company_id as marketCompanyId, ")
-            add("        m.address_id as marketAddressId, ")
-            add("        ad.id as addressId, ")
-            add("        ad.local_id as addressLocalId, ")
-            add("        ad.state as addressState, ")
-            add("        ad.city as addressCity, ")
-            add("        ad.public_place as addressPublicPlace, ")
-            add("        ad.number as addressNumber, ")
-            add("        ad.complement as addressComplement, ")
-            add("        ad.cep as addressCep, ")
-            add("        comp.id as companyId, ")
-            add("        comp.name as companyName, ")
-            add("        theme.id as themeId, ")
-            add("        theme.color_primary as themeColorPrimary, ")
-            add("        theme.color_secondary as themeColorSecondary, ")
-            add("        theme.color_tertiary as themeColorTertiary, ")
-            add("        theme.image_logo as themeLogo ")
+            add("        cb.market_id as categoryBrandMarketId, ")
+            add("        c.local_id as categoryBrandCategoryLocalId ")
         }
 
         val from = StringJoiner("\n\t")
@@ -102,18 +85,18 @@ class CustomBrandRepositoryImpl : ICustomBrandRepository {
             add(" from brands b ")
             add(" inner join categories_brands cb on cb.brand_id = b.id ")
             add(" inner join categories c on c.id = cb.category_id ")
-            add(" inner join markets m on m.id = b.market_id ")
-            add(" inner join addresses ad on ad.id = m.address_id ")
-            add(" inner join companies comp on comp.id = m.company_id ")
-            add(" inner join theme_definitions theme on theme.id = comp.theme_definitions_id ")
         }
 
         val where = StringJoiner("\n\t")
         with(where) {
             add(" where b.active ")
-            add(" and m.id = :pMarketId ")
-
+            add(" and b.market_id = :pMarketId ")
             params.add(Parameter(name = "pMarketId", value = marketId))
+
+            if (!categoryLocalId.isNullOrEmpty()) {
+                add(" and c.local_id = :pCategoryId ")
+                params.add(Parameter(name = "pCategoryId", value = categoryLocalId))
+            }
 
             if (!simpleFilter.isNullOrEmpty()) {
                 add(" and b.name like :pSimpleFilter ")
@@ -140,56 +123,23 @@ class CustomBrandRepositoryImpl : ICustomBrandRepository {
 
         val query = entityManager.createNativeQuery(sql.toString(), Tuple::class.java)
         query.setParameters(params)
-        query.maxResults = limit
-        query.firstResult = offset
 
         val tuples = query.getResultList(Tuple::class.java)
 
         return tuples.map { tuple ->
-            BrandReadDTO(
-                id = tuple.get("brandId", Long::class.javaObjectType),
-                name = tuple.get("brandName", String::class.javaObjectType),
-                localId = tuple.get("brandLocalId", String::class.javaObjectType),
-                marketId = tuple.get("marketId", Long::class.javaObjectType),
-                active = tuple.get("brandActive", Boolean::class.javaObjectType),
-                category = CategoryDTO(
-                    id = tuple.get("categoryId", Long::class.javaObjectType),
-                    name = tuple.get("categoryName", String::class.javaObjectType),
-                    localId = tuple.get("categoryLocalId", String::class.javaObjectType),
-                    marketId = tuple.get("marketId", Long::class.javaObjectType)
+            BrandAndReferencesDTO(
+                brand = BrandDTO(
+                    active = true,
+                    id = tuple.get("brandId", Long::class.javaObjectType),
+                    localId = tuple.get("brandLocalId", String::class.javaObjectType),
+                    name = tuple.get("brandName", String::class.javaObjectType),
+                    marketId = tuple.get("brandMarketId", Long::class.javaObjectType)
                 ),
                 categoryBrand = CategoryBrandDTO(
-                    id = tuple.get("categoryBrandId", Long::class.javaObjectType),
+                    active = true,
                     localId = tuple.get("categoryBrandLocalId", String::class.javaObjectType),
-                    localBrandId = tuple.get("brandLocalId", String::class.javaObjectType),
-                    localCategoryId = tuple.get("categoryLocalId", String::class.javaObjectType),
-                    marketId = tuple.get("marketId", Long::class.javaObjectType)
-                ),
-                market = MarketDTO(
-                    id = tuple.get("marketId", Long::class.javaObjectType),
-                    address = AddressDTO(
-                        id = tuple.get("addressId", Long::class.javaObjectType),
-                        localId = tuple.get("addressLocalId", String::class.javaObjectType),
-                        state = tuple.get("addressState", String::class.javaObjectType),
-                        city = tuple.get("addressCity", String::class.javaObjectType),
-                        publicPlace = tuple.get("addressPublicPlace", String::class.javaObjectType),
-                        number = tuple.get("addressNumber", String::class.javaObjectType),
-                        complement = tuple.get("addressComplement", String::class.javaObjectType),
-                        cep = tuple.get("addressCep", String::class.javaObjectType)
-                    ),
-                    name = tuple.get("marketName", String::class.javaObjectType),
-                    companyId = tuple.get("companyId", Long::class.javaObjectType)
-                ),
-                company = CompanyDTO(
-                    id = tuple.get("companyId", Long::class.javaObjectType),
-                    name = tuple.get("companyName", String::class.javaObjectType),
-                    themeDefinitions = ThemeDefinitionsDTO(
-                        id = tuple.get("themeId", Long::class.javaObjectType),
-                        colorPrimary = tuple.get("themeColorPrimary", String::class.javaObjectType),
-                        colorSecondary = tuple.get("themeColorSecondary", String::class.javaObjectType),
-                        colorTertiary = tuple.get("themeColorTertiary", String::class.javaObjectType),
-                        imageLogo = tuple.get("themeLogo", ByteArray::class.javaObjectType)
-                    )
+                    localCategoryId = tuple.get("categoryBrandCategoryLocalId", String::class.javaObjectType),
+                    localBrandId = tuple.get("brandLocalId", String::class.javaObjectType)
                 )
             )
         }

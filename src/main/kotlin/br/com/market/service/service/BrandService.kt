@@ -1,8 +1,6 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.BrandBodyDTO
-import br.com.market.service.dto.BrandDTO
-import br.com.market.service.dto.BrandReadDTO
+import br.com.market.service.dto.BrandAndReferencesDTO
 import br.com.market.service.dto.CategoryBrandDTO
 import br.com.market.service.models.Brand
 import br.com.market.service.models.CategoryBrand
@@ -24,7 +22,7 @@ class BrandService(
     private val marketRepository: IMarketRepository
     ) {
     
-    fun save(brandBodyDTO: BrandBodyDTO) {
+    fun save(brandBodyDTO: BrandAndReferencesDTO) {
         with(brandBodyDTO.brand) {
             val brand = customBrandRepository.findBrandByLocalId(localId)?.copy(
                 name = name,
@@ -59,36 +57,7 @@ class BrandService(
         }
     }
 
-    fun sync(brandBodyDTOs: List<BrandBodyDTO>) {
-        brandBodyDTOs.forEach(::save)
-    }
-
-    fun findAllBrandDTOs(marketId: Long, limit: Int? = null, offset: Int? = null): List<BrandDTO> {
-        return customBrandRepository.findBrands(marketId, limit, offset).map {
-            BrandDTO(
-                localId = it.localId!!,
-                name = it.name,
-                marketId = it.market?.id,
-                active = it.active,
-                id = it.id
-            )
-        }
-    }
-
-    fun findCategoryBrandDTOs(marketId: Long, limit: Int? = null, offset: Int? = null): List<CategoryBrandDTO> {
-        return customCategoryBrandRepository.findCategoryBrands(marketId, limit, offset).map {
-            CategoryBrandDTO(
-                localId = it.localId!!,
-                marketId = it.market?.id,
-                active = it.active,
-                localCategoryId = it.category?.localId!!,
-                localBrandId = it.brand?.localId!!,
-                id = it.id
-            )
-        }
-    }
-
-    fun getListLovBrandReadDTO(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): List<BrandReadDTO> {
-        return customBrandRepository.getListLovBrandReadDTO(simpleFilter, marketId, limit, offset)
+    fun getListBrand(simpleFilter: String?, categoryLocalId: String?, marketId: Long, limit: Int, offset: Int): List<BrandAndReferencesDTO> {
+        return customBrandRepository.getListBrand(simpleFilter, categoryLocalId, marketId, limit, offset)
     }
 }
