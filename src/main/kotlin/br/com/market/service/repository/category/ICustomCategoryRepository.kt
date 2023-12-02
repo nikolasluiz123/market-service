@@ -8,4 +8,6 @@ interface ICustomCategoryRepository {
     fun findCategoryByLocalId(localId: String): Category?
 
     fun getListCategory(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): List<CategoryDTO>
+
+    fun toggleActive(categoryLocalId: String)
 }

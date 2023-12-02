@@ -44,4 +44,13 @@ class ExceptionHandler {
             error = exception.message
         )
     }
+
+    @ExceptionHandler(Exception::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun handlerExceptions(exception: Exception): PersistenceResponse {
+        return PersistenceResponse(
+            code = HttpStatus.BAD_REQUEST.value(),
+            error = exception.message
+        )
+    }
 }

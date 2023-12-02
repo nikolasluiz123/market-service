@@ -4,6 +4,7 @@ import br.com.market.service.dto.BrandAndReferencesDTO
 import br.com.market.service.dto.CategoryBrandDTO
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
+import br.com.market.service.response.SingleValueResponse
 import br.com.market.service.service.BrandService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -40,5 +41,12 @@ class BrandController(private val service: BrandService) {
     ): ResponseEntity<ReadResponse<BrandAndReferencesDTO>> {
         val values = service.getListBrand(simpleFilter, categoryLocalId, marketId, limit, offset)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
+    }
+
+    @GetMapping("/{categoryId}/{brandId}")
+    @Transactional(timeout = 600)
+    fun findBrandByLocalId(@PathVariable categoryId: String, @PathVariable brandId: String): ResponseEntity<SingleValueResponse<BrandAndReferencesDTO>> {
+        val value = service.findBrandByLocalId(categoryId = categoryId, brandId = brandId)
+        return ResponseEntity.ok(SingleValueResponse(value = value, code = HttpStatus.OK.value(), success = true))
     }
 }

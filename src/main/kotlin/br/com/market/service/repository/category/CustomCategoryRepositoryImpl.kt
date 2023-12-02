@@ -103,4 +103,36 @@ class CustomCategoryRepositoryImpl : ICustomCategoryRepository {
             )
         }
     }
+
+    override fun toggleActive(categoryLocalId: String) {
+        val params = mutableListOf<Parameter>()
+        params.add(Parameter("pCategoryId", categoryLocalId))
+
+        val categoryUpdate = StringJoiner("\n\t")
+        with(categoryUpdate) {
+            add(" update categories ")
+            add(" set active = not active ")
+            add(" where local_id = :pCategoryId ")
+        }
+
+        val brandUpdate = StringJoiner("\n\t")
+        with(brandUpdate) {
+            add(" update categories_brands ")
+            add(" set active = not active ")
+            add(" where id in ( ")
+            add("               select cb.id ")
+            add("               from categories_brands cb ")
+            add("               inner join categories c on c.id = cb.category_id ")
+            add("               where c.local_id = :pCategoryId ")
+            add("             ) ")
+        }
+
+        var query = this.entityManager.createNativeQuery(categoryUpdate.toString())
+        query.setParameters(params)
+        query.executeUpdate()
+
+        query = this.entityManager.createNativeQuery(brandUpdate.toString())
+        query.setParameters(params)
+        query.executeUpdate()
+    }
 }

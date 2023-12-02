@@ -9,4 +9,6 @@ interface ICustomBrandRepository {
     fun findBrands(marketId: Long, limit: Int? = null, offset: Int? = null): List<Brand>
 
     fun getListBrand(simpleFilter: String?, categoryLocalId: String?, marketId: Long, limit: Int, offset: Int): List<BrandAndReferencesDTO>
+
+    fun findBrandAndReferenceBy(categoryLocalId: String, brandLocalId: String): BrandAndReferencesDTO
 }

@@ -30,9 +30,7 @@ class CategoryService(
     }
 
     fun toggleActive(id: String) {
-        customCategoryRepository.findCategoryByLocalId(id)?.let {
-            categoryRepository.save(it.copy(active = !it.active))
-        }
+        customCategoryRepository.toggleActive(id)
     }
 
     fun getListCategory(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): List<CategoryDTO> {

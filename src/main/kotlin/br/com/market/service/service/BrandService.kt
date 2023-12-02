@@ -60,4 +60,20 @@ class BrandService(
     fun getListBrand(simpleFilter: String?, categoryLocalId: String?, marketId: Long, limit: Int, offset: Int): List<BrandAndReferencesDTO> {
         return customBrandRepository.getListBrand(simpleFilter, categoryLocalId, marketId, limit, offset)
     }
+
+    fun findCategoryBrandBy(categoryLocalId: String, brandLocalId: String): CategoryBrandDTO {
+        return customCategoryBrandRepository.findCategoryBrandBy(categoryLocalId, brandLocalId).run {
+            CategoryBrandDTO(
+                localBrandId = brand?.localId!!,
+                localCategoryId = category?.localId!!,
+                marketId = market?.id!!,
+                localId = localId!!,
+                id = id
+            )
+        }
+    }
+
+    fun findBrandByLocalId(categoryId: String, brandId: String): BrandAndReferencesDTO {
+        return customBrandRepository.findBrandAndReferenceBy(categoryId, brandId)
+    }
 }

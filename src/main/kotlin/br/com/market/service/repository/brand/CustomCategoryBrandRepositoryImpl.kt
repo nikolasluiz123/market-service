@@ -57,4 +57,24 @@ class CustomCategoryBrandRepositoryImpl : ICustomCategoryBrandRepository {
         return query.resultList
     }
 
+    override fun findCategoryBrandBy(categoryLocalId: String, brandLocalId: String): CategoryBrand {
+        val params = mutableListOf<Parameter>()
+        val sql = StringJoiner("\n\t")
+
+        with(sql) {
+            add(" select cb ")
+            add(" from ${CategoryBrand::class.java.name} cb ")
+            add(" where cb.category.localId = :pCategoryId ")
+            add(" and cb.brand.localId = :pBrandId ")
+        }
+
+        params.add(Parameter(name = "pCategoryId", value = categoryLocalId))
+        params.add(Parameter(name = "pBrandId", value = brandLocalId))
+
+        val query = entityManager.createQuery(sql.toString(), CategoryBrand::class.java)
+        query.setParameters(params)
+
+        return query.singleResult
+    }
+
 }
