@@ -180,7 +180,14 @@ class CustomBrandRepositoryImpl : ICustomBrandRepository {
         params.add(Parameter(name = "pCategoryId", value = categoryLocalId))
         params.add(Parameter(name = "pBrandId", value = brandLocalId))
 
-        val query = entityManager.createQuery(select.toString(), Tuple::class.java)
+        val sql = StringJoiner("\r\n")
+        with(sql) {
+            add(select.toString())
+            add(from.toString())
+            add(where.toString())
+        }
+
+        val query = entityManager.createQuery(sql.toString(), Tuple::class.java)
         query.setParameters(params)
 
         val tuple = query.singleResult
