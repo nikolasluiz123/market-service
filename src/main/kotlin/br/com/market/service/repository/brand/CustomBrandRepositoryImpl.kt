@@ -156,7 +156,7 @@ class CustomBrandRepositoryImpl : ICustomBrandRepository {
             add("        b.name as brandName, ")
             add("        b.market.id as marketId, ")
             add("        b.active as brandActive, ")
-            add("        b.localId as brandLocalId ")
+            add("        b.localId as brandLocalId, ")
             add("        cb.id as categoryBrandId, ")
             add("        cb.localId as categoryBrandLocalId, ")
             add("        c.localId as categoryLocalId ")
