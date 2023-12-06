@@ -1,8 +1,8 @@
 package br.com.market.service.service
 
-import br.com.market.service.dto.ProductBodyDTO
+import br.com.market.service.controller.params.ProductServiceSearchParams
+import br.com.market.service.dto.ProductAndReferencesDTO
 import br.com.market.service.dto.ProductClientDTO
-import br.com.market.service.dto.ProductDTO
 import br.com.market.service.dto.ProductImageDTO
 import br.com.market.service.models.Product
 import br.com.market.service.models.ProductImage
@@ -24,8 +24,8 @@ class ProductService(
     private val marketRepository: IMarketRepository
 ) {
 
-    fun saveProduct(productBodyDTO: ProductBodyDTO) {
-        with(productBodyDTO.product) {
+    fun saveProduct(productAndReferencesDTO: ProductAndReferencesDTO) {
+        with(productAndReferencesDTO.product) {
             val product = customProductRepository.findProductByLocalId(localId)?.copy(
                 name = name,
                 price = price!!,
@@ -47,7 +47,7 @@ class ProductService(
 
             productRepository.save(product)
 
-            val productImages = productBodyDTO.productImages.map { productImageDTO ->
+            val productImages = productAndReferencesDTO.productImages.map { productImageDTO ->
                 with(productImageDTO) {
                     customProductImageRepository.findProductImageByLocalId(localId)?.copy(
                         localId = localId,
@@ -104,42 +104,11 @@ class ProductService(
         }
     }
 
-    fun sync(productBodyDTOs: List<ProductBodyDTO>) {
-        productBodyDTOs.forEach(::saveProduct)
-    }
-
-    fun findAllProductDTOs(marketId: Long, limit: Int? = null, offset: Int? = null): List<ProductDTO> {
-        return customProductRepository.findAll(marketId, limit, offset).map {
-            ProductDTO(
-                id = it.id!!,
-                active = it.active,
-                localId = it.localId!!,
-                name = it.name,
-                price = it.price,
-                quantityUnit = it.quantityUnit,
-                quantity = it.quantity,
-                categoryBrandLocalId = it.categoryBrand?.localId,
-                marketId = it.market?.id
-            )
-        }
-    }
-
-    fun findProductImageDTOs(marketId: Long, limit: Int? = null, offset: Int? = null): List<ProductImageDTO> {
-        return customProductImageRepository.findAll(marketId, limit, offset).map {
-            ProductImageDTO(
-                id = it.id,
-                localId = it.localId!!,
-                active = it.active,
-                bytes = it.bytes,
-                imageUrl = it.imageUrl,
-                productLocalId = it.product?.localId,
-                principal = it.principal!!,
-                marketId = it.market?.id!!
-            )
-        }
-    }
-
     fun findProducts(simpleFilter: String?, limit: Int, offset: Int): List<ProductClientDTO> {
         return customProductRepository.findProducts(simpleFilter, limit, offset)
+    }
+
+    fun getListProducts(params: ProductServiceSearchParams): List<ProductAndReferencesDTO> {
+        return customProductRepository.getListProducts(params)
     }
 }

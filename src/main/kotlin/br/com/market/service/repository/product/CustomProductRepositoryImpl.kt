@@ -1,5 +1,6 @@
 package br.com.market.service.repository.product
 
+import br.com.market.service.controller.params.ProductServiceSearchParams
 import br.com.market.service.dto.*
 import br.com.market.service.extensions.getResultList
 import br.com.market.service.extensions.setParameters
@@ -221,6 +222,113 @@ class CustomProductRepositoryImpl : ICustomProductRepository {
                     )
                 )
             )
+        }
+
+        return result
+    }
+
+    override fun getListProducts(params: ProductServiceSearchParams): List<ProductAndReferencesDTO> {
+        val queryParams = mutableListOf<Parameter>()
+        val select = StringJoiner("\n\t")
+
+        with(select) {
+            add(" select p.id as productId, ")
+            add("        p.local_id as productLocalId, ")
+            add("        p.active as productActive, ")
+            add("        p.name as productName, ")
+            add("        p.price as productPrice, ")
+            add("        p.quantity as productQuantity, ")
+            add("        p.quantity_unit as productQuantityUnit, ")
+            add("        p.market_id as marketId, ")
+            add("        cb.local_id as categoryBrandLocalId, ")
+            add("        image.id as imageId, ")
+            add("        image.local_id as imageLocalId, ")
+            add("        image.bytes as imageBytes ")
+        }
+
+        val from = StringJoiner("\n\t")
+
+        with(from) {
+            add(" from products p ")
+            add(" inner join products_images image on image.product_id = p.id and image.principal ")
+            add(" inner join categories_brands cb on cb.id = p.category_brand_id ")
+            add(" inner join categories c on c.id = cb.category_id ")
+            add(" inner join brands b on b.id = cb.brand_id ")
+        }
+
+        val where = StringJoiner("\n\t")
+
+        with(where) {
+            add(" where p.active ")
+            add(" and image.active ")
+
+            if (!params.categoryId.isNullOrEmpty()) {
+                add(" and c.local_id = :pCategoryId ")
+                queryParams.add(Parameter("pCategoryId", params.categoryId))
+            }
+
+            if (!params.brandId.isNullOrEmpty()) {
+                add(" and b.local_id = :pBrandId ")
+                queryParams.add(Parameter("pBrandId", params.brandId))
+            }
+
+            if (!params.quickFilter.isNullOrEmpty()) {
+                add(" and p.name like :pQuickFilter ")
+                queryParams.add(Parameter("pQuickFilter", "%${params.quickFilter}%"))
+            }
+        }
+
+        val orderBy = StringJoiner("\n\t")
+
+        with(orderBy) {
+            add(" order by p.name ")
+        }
+
+        val sql = StringJoiner("\r\n")
+        with(sql) {
+            add(select.toString())
+            add(from.toString())
+            add(where.toString())
+            add(orderBy.toString())
+            add("limit :pLimit offset :pOffset ")
+
+            queryParams.add(Parameter("pLimit", params.limit!!))
+            queryParams.add(Parameter("pOffset", params.offset!!))
+        }
+
+        val query = entityManager.createNativeQuery(sql.toString(), Tuple::class.java)
+        query.setParameters(queryParams)
+
+        val result = mutableListOf<ProductAndReferencesDTO>()
+        query.getResultList(Tuple::class.java).forEach { tuple ->
+            val position = tuple.get("productQuantityUnit", Short::class.javaObjectType)
+            val enumUnit = EnumUnit.entries[position.toInt()]
+
+            val dto = ProductAndReferencesDTO(
+                product = ProductDTO(
+                    id = tuple.get("productId", Long::class.javaObjectType),
+                    name = tuple.get("productName", String::class.javaObjectType),
+                    price = tuple.get("productPrice", Double::class.javaObjectType),
+                    quantity = tuple.get("productQuantity", Double::class.javaObjectType),
+                    quantityUnit = enumUnit,
+                    localId = tuple.get("productLocalId", String::class.javaObjectType),
+                    marketId = tuple.get("marketId", Long::class.javaObjectType),
+                    categoryBrandLocalId = tuple.get("categoryBrandLocalId", String::class.javaObjectType)
+                ),
+
+                productImages = listOf(
+                    ProductImageDTO(
+                        id = tuple.get("imageId", Long::class.javaObjectType),
+                        localId = tuple.get("imageLocalId", String::class.javaObjectType),
+                        bytes = tuple.get("imageBytes", ByteArray::class.javaObjectType),
+                        productLocalId = tuple.get("productLocalId", String::class.javaObjectType),
+                        principal = true,
+                        marketId = tuple.get("marketId", Long::class.javaObjectType)
+                    )
+                )
+            )
+
+            result.add(dto)
         }
 
         return result
