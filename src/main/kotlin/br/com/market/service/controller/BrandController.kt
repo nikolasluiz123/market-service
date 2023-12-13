@@ -1,7 +1,6 @@
 package br.com.market.service.controller
 
 import br.com.market.service.dto.BrandAndReferencesDTO
-import br.com.market.service.dto.CategoryBrandDTO
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
 import br.com.market.service.response.SingleValueResponse
@@ -23,10 +22,10 @@ class BrandController(private val service: BrandService) {
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
-    @PostMapping("/toggleActive")
+    @PostMapping("/toggleActive/{categoryId}/{brandId}")
     @Transactional(timeout = 600)
-    fun toggleActive(@RequestBody @Valid brandDTO: CategoryBrandDTO): ResponseEntity<PersistenceResponse> {
-        service.toggleActive(brandDTO)
+    fun toggleActive(@PathVariable categoryId: String, @PathVariable brandId: String): ResponseEntity<PersistenceResponse> {
+        service.toggleActive(categoryId, brandId)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 

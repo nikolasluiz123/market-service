@@ -13,4 +13,6 @@ interface ICustomProductRepository {
     fun findProducts(simpleFilter: String?, limit: Int, offset: Int): List<ProductClientDTO>
 
     fun getListProducts(params: ProductServiceSearchParams): List<ProductAndReferencesDTO>
+
+    fun findProductAndReferencesByLocalId(productLocalId: String): ProductAndReferencesDTO
 }

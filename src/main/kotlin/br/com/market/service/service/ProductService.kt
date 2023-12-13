@@ -98,10 +98,8 @@ class ProductService(
 
     }
 
-    fun toggleActiveProductImage(productImageLocalId: String) {
-        customProductImageRepository.findProductImageByLocalId(productImageLocalId)?.let {
-            productImageRepository.save(it.copy(active = !it.active))
-        }
+    fun toggleActiveProductImage(productId: String, imageId: String) {
+        customProductImageRepository.toggleActiveProductImage(productId, imageId)
     }
 
     fun findProducts(simpleFilter: String?, limit: Int, offset: Int): List<ProductClientDTO> {
@@ -110,5 +108,9 @@ class ProductService(
 
     fun getListProducts(params: ProductServiceSearchParams): List<ProductAndReferencesDTO> {
         return customProductRepository.getListProducts(params)
+    }
+
+    fun findProductByLocalId(productLocalId: String): ProductAndReferencesDTO {
+        return customProductRepository.findProductAndReferencesByLocalId(productLocalId)
     }
 }

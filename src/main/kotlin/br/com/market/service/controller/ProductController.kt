@@ -6,6 +6,7 @@ import br.com.market.service.dto.ProductClientDTO
 import br.com.market.service.dto.ProductImageDTO
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
+import br.com.market.service.response.SingleValueResponse
 import br.com.market.service.service.ProductService
 import com.google.gson.Gson
 import jakarta.validation.Valid
@@ -41,8 +42,8 @@ class ProductController(private val service: ProductService) {
 
     @PostMapping("/image/toggleActive")
     @Transactional(timeout = 600)
-    fun toggleActiveProductImage(@RequestParam productImageLocalId: String): ResponseEntity<PersistenceResponse> {
-        service.toggleActiveProductImage(productImageLocalId)
+    fun toggleActiveProductImage(@RequestParam productId: String, @RequestParam imageId: String): ResponseEntity<PersistenceResponse> {
+        service.toggleActiveProductImage(productId, imageId)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
@@ -60,5 +61,12 @@ class ProductController(private val service: ProductService) {
         val values = service.getListProducts(params)
 
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
+    }
+
+    @GetMapping("/{productId}")
+    @Transactional(timeout = 600)
+    fun findProductByLocalId(@PathVariable productLocalId: String): ResponseEntity<SingleValueResponse<ProductAndReferencesDTO>> {
+        val value = service.findProductByLocalId(productLocalId)
+        return ResponseEntity.ok(SingleValueResponse(value = value, code = HttpStatus.OK.value(), success = true))
     }
 }

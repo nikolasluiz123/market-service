@@ -51,10 +51,8 @@ class BrandService(
         }
     }
 
-    fun toggleActive(categoryBrandDTO: CategoryBrandDTO) {
-        customCategoryBrandRepository.findCategoryBrandByLocalId(categoryBrandDTO.localId)?.let {
-            categoryBrandRepository.save(it.copy(active = !it.active))
-        }
+    fun toggleActive(categoryId: String, brandId: String) {
+        customBrandRepository.toggleActive(categoryId, brandId)
     }
 
     fun getListBrand(simpleFilter: String?, categoryLocalId: String?, marketId: Long, limit: Int, offset: Int): List<BrandAndReferencesDTO> {

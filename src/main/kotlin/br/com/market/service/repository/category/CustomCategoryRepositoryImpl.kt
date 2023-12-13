@@ -105,6 +105,13 @@ class CustomCategoryRepositoryImpl : ICustomCategoryRepository {
     }
 
     override fun toggleActive(categoryLocalId: String) {
+        toggleActiveCategories(categoryLocalId)
+        toggleActiveBrands(categoryLocalId)
+        toggleActiveProducts(categoryLocalId)
+        toggleActiveProductsImages(categoryLocalId)
+    }
+
+    fun toggleActiveCategories(categoryLocalId: String) {
         val params = mutableListOf<Parameter>()
         params.add(Parameter("pCategoryId", categoryLocalId))
 
@@ -114,6 +121,15 @@ class CustomCategoryRepositoryImpl : ICustomCategoryRepository {
             add(" set active = not active ")
             add(" where local_id = :pCategoryId ")
         }
+
+        val query = this.entityManager.createNativeQuery(categoryUpdate.toString())
+        query.setParameters(params)
+        query.executeUpdate()
+    }
+
+    fun toggleActiveBrands(categoryLocalId: String) {
+        val params = mutableListOf<Parameter>()
+        params.add(Parameter("pCategoryId", categoryLocalId))
 
         val brandUpdate = StringJoiner("\n\t")
         with(brandUpdate) {
@@ -127,11 +143,51 @@ class CustomCategoryRepositoryImpl : ICustomCategoryRepository {
             add("             ) ")
         }
 
-        var query = this.entityManager.createNativeQuery(categoryUpdate.toString())
+        val query = this.entityManager.createNativeQuery(brandUpdate.toString())
         query.setParameters(params)
         query.executeUpdate()
+    }
 
-        query = this.entityManager.createNativeQuery(brandUpdate.toString())
+    fun toggleActiveProducts(categoryLocalId: String) {
+        val params = mutableListOf<Parameter>()
+        params.add(Parameter("pCategoryId", categoryLocalId))
+
+        val productsUpdate = StringJoiner("\n\t")
+        with(productsUpdate) {
+            add(" update products ")
+            add(" set active = not active ")
+            add(" where id in ( ")
+            add("               select p.id ")
+            add("               from products p ")
+            add("               inner join categories_brands cb on cb.id = p.category_brand_id ")
+            add("               inner join categories c on c.id = cb.category_id ")
+            add("               where c.local_id = :pCategoryId ")
+            add("             ) ")
+        }
+
+        val query = this.entityManager.createNativeQuery(productsUpdate.toString())
+        query.setParameters(params)
+        query.executeUpdate()
+    }
+
+    fun toggleActiveProductsImages(categoryLocalId: String) {
+        val params = mutableListOf<Parameter>()
+        params.add(Parameter("pCategoryId", categoryLocalId))
+
+        val imagesUpdate = StringJoiner("\n\t")
+        with(imagesUpdate) {
+            add(" update products_images ")
+            add(" set active = not active ")
+            add(" where product_id in ( ")
+            add("               select p.id ")
+            add("               from products p ")
+            add("               inner join categories_brands cb on cb.id = p.category_brand_id ")
+            add("               inner join categories c on c.id = cb.category_id ")
+            add("               where c.local_id = :pCategoryId ")
+            add("             ) ")
+        }
+
+        val query = this.entityManager.createNativeQuery(imagesUpdate.toString())
         query.setParameters(params)
         query.executeUpdate()
     }

@@ -118,4 +118,53 @@ class CustomProductImageRepositoryImpl : ICustomProductImageRepository {
         return query.resultList
     }
 
+    override fun toggleActiveProductImage(productId: String, imageId: String) {
+        val images = getProductImages(productId)
+        val imageToToggleActive = images.find { it.localId == imageId }!!
+        images.remove(imageToToggleActive)
+
+        if (imageToToggleActive.principal!!) {
+            val image = images[0]
+            image.principal = true
+
+            updateProductImagePrincipal(image.product?.id!!, image.id!!)
+            inactivateImage(imageId)
+        }
+    }
+
+    private fun getProductImages(productId: String): MutableList<ProductImage> {
+        val params = mutableListOf<Parameter>()
+        params.add(Parameter("pProductId", productId))
+
+        val select = StringJoiner("\n\t")
+        with(select) {
+            add(" select image.* ")
+            add(" from ${ProductImage::class.java.name} image ")
+            add(" where image.product.id = :pProductId and image.active ")
+        }
+
+        val query = entityManager.createQuery(select.toString(), ProductImage::class.java)
+        query.setParameters(params)
+
+        return query.resultList
+    }
+
+    private fun inactivateImage(imageId: String) {
+        val params = mutableListOf<Parameter>()
+        params.add(Parameter(name = "pImageId", value = imageId))
+
+        val sql = StringJoiner("\n\t")
+
+        with(sql) {
+            add("update ${ProductImage::class.java.name} pi")
+            add("set pi.active = false")
+            add("where pi.localId = :pImageId")
+        }
+
+        val query = entityManager.createQuery(sql.toString())
+        query.setParameters(params)
+
+        query.executeUpdate()
+    }
+
 }
