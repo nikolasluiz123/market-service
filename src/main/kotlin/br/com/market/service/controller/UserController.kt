@@ -1,5 +1,6 @@
 package br.com.market.service.controller
 
+import br.com.market.service.controller.ControllerConstants.TIMEOUT
 import br.com.market.service.dto.AuthenticationRequestDTO
 import br.com.market.service.dto.UserDTO
 import br.com.market.service.response.AuthenticationResponse
@@ -17,32 +18,32 @@ import org.springframework.web.bind.annotation.*
 class UserController(private val service: UserService) {
 
     @PostMapping("/register")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun register(@RequestBody registerRequest: UserDTO): ResponseEntity<AuthenticationResponse> {
         return ResponseEntity.ok(service.register(registerRequest))
     }
 
     @PostMapping("/registerAll")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun register(@RequestBody list: List<UserDTO>): ResponseEntity<AuthenticationResponse> {
         return ResponseEntity.ok(service.registerAll(list))
     }
 
     @PostMapping("/authenticate")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun authenticate(@RequestBody authenticateRequest: AuthenticationRequestDTO): ResponseEntity<AuthenticationResponse> {
         return ResponseEntity.ok(service.authenticate(authenticateRequest))
     }
 
     @GetMapping
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun findAll(@RequestParam marketId: Long): ResponseEntity<ReadResponse<UserDTO>> {
         val values = service.findAllUserDTOs(marketId)
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping("/sync")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun sync(@RequestBody @Valid userDTOs: List<UserDTO>): ResponseEntity<MarketServiceResponse> {
         service.sync(userDTOs)
         return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))

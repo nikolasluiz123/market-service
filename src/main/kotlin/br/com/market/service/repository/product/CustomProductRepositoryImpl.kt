@@ -358,6 +358,7 @@ class CustomProductRepositoryImpl : ICustomProductRepository {
 
         with(from) {
             add(" from products p ")
+            add(" inner join categories_brands cb on cb.id = p.category_brand_id ")
             add(" inner join products_images image on image.product_id = p.id ")
         }
 
@@ -375,10 +376,10 @@ class CustomProductRepositoryImpl : ICustomProductRepository {
             add(where.toString())
         }
 
-        val query = entityManager.createQuery(sql.toString(), Tuple::class.java)
+        val query = entityManager.createNativeQuery(sql.toString(), Tuple::class.java)
         query.setParameters(queryParams)
 
-        return query.singleResult.run {
+        return (query.singleResult as Tuple).run {
             val position = get("productQuantityUnit", Short::class.javaObjectType)
             val enumUnit = EnumUnit.entries[position.toInt()]
 
@@ -390,7 +391,8 @@ class CustomProductRepositoryImpl : ICustomProductRepository {
                     quantity = get("productQuantity", Double::class.javaObjectType),
                     quantityUnit = enumUnit,
                     localId = get("productLocalId", String::class.javaObjectType),
-                    marketId = get("marketId", Long::class.javaObjectType)
+                    marketId = get("marketId", Long::class.javaObjectType),
+                    categoryBrandLocalId = get("categoryBrandLocalId", String::class.javaObjectType)
                 ),
                 productImages = findProductImages(
                     productId = get("productId", Long::class.javaObjectType),
@@ -409,7 +411,7 @@ class CustomProductRepositoryImpl : ICustomProductRepository {
         with(select) {
             add(" select image.id as imageId, ")
             add("        image.local_id as imageLocalId, ")
-            add("        image.bytes as imageByte,s ")
+            add("        image.bytes as imageBytes, ")
             add("        image.principal as principal ")
         }
 
@@ -433,10 +435,10 @@ class CustomProductRepositoryImpl : ICustomProductRepository {
             add(where.toString())
         }
 
-        val query = entityManager.createQuery(sql.toString(), Tuple::class.java)
+        val query = entityManager.createNativeQuery(sql.toString(), Tuple::class.java)
         query.setParameters(queryParams)
 
-        return query.resultList.map { tuple ->
+        return query.getResultList(Tuple::class.java).map { tuple ->
             ProductImageDTO(
                 id = tuple.get("imageId", Long::class.javaObjectType),
                 localId = tuple.get("imageLocalId", String::class.javaObjectType),

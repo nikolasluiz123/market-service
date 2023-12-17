@@ -1,5 +1,6 @@
 package br.com.market.service.controller
 
+import br.com.market.service.controller.ControllerConstants.TIMEOUT
 import br.com.market.service.controller.params.ProductServiceSearchParams
 import br.com.market.service.dto.ProductAndReferencesDTO
 import br.com.market.service.dto.ProductClientDTO
@@ -20,28 +21,28 @@ import org.springframework.web.bind.annotation.*
 class ProductController(private val service: ProductService) {
 
     @PostMapping
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun saveProduct(@RequestBody @Valid productAndReferencesDTO: ProductAndReferencesDTO): ResponseEntity<PersistenceResponse> {
         service.saveProduct(productAndReferencesDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping("/image")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun updateProductImage(@RequestBody @Valid productImageDTO: ProductImageDTO): ResponseEntity<PersistenceResponse> {
         service.updateProductImage(productImageDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping("/toggleActive")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun toggleActiveProduct(@RequestParam productLocalId: String): ResponseEntity<PersistenceResponse> {
         service.toggleActiveProduct(productLocalId)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping("/image/toggleActive")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun toggleActiveProductImage(@RequestParam productId: String, @RequestParam imageId: String): ResponseEntity<PersistenceResponse> {
         service.toggleActiveProductImage(productId, imageId)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
@@ -55,7 +56,7 @@ class ProductController(private val service: ProductService) {
     }
 
     @GetMapping
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun getListProducts(@RequestParam("jsonParams") jsonParams: String): ResponseEntity<ReadResponse<ProductAndReferencesDTO>> {
         val params = Gson().fromJson(jsonParams, ProductServiceSearchParams::class.java)
         val values = service.getListProducts(params)
@@ -64,9 +65,9 @@ class ProductController(private val service: ProductService) {
     }
 
     @GetMapping("/{productId}")
-    @Transactional(timeout = 600)
-    fun findProductByLocalId(@PathVariable productLocalId: String): ResponseEntity<SingleValueResponse<ProductAndReferencesDTO>> {
-        val value = service.findProductByLocalId(productLocalId)
+    @Transactional(timeout = TIMEOUT)
+    fun findProductByLocalId(@PathVariable productId: String): ResponseEntity<SingleValueResponse<ProductAndReferencesDTO>> {
+        val value = service.findProductByLocalId(productId)
         return ResponseEntity.ok(SingleValueResponse(value = value, code = HttpStatus.OK.value(), success = true))
     }
 }

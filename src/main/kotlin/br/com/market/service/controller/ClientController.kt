@@ -1,5 +1,6 @@
 package br.com.market.service.controller
 
+import br.com.market.service.controller.ControllerConstants.TIMEOUT
 import br.com.market.service.dto.ClientDTO
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.SingleValueResponse
@@ -19,7 +20,7 @@ class ClientController(
 ) {
 
     @PostMapping
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun saveClient(@RequestBody @Valid clientDTO: ClientDTO): ResponseEntity<PersistenceResponse> {
         val responseRegisterUser = userService.register(clientDTO.user)
 
@@ -37,14 +38,14 @@ class ClientController(
     }
 
     @GetMapping("/email")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun isUniqueEmail(@RequestParam email: String): ResponseEntity<SingleValueResponse<Boolean>> {
         val isUnique = clientService.isUniqueEmail(email)
         return ResponseEntity.ok(SingleValueResponse(value = isUnique, code = HttpStatus.OK.value(), success = true))
     }
 
     @GetMapping("/cpf")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun isUniqueCPF(@RequestParam cpf: String): ResponseEntity<SingleValueResponse<Boolean>> {
         val isUnique = clientService.isUniqueCPF(cpf)
         return ResponseEntity.ok(SingleValueResponse(value = isUnique, code = HttpStatus.OK.value(), success = true))

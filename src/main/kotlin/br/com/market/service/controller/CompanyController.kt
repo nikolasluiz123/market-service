@@ -1,5 +1,6 @@
 package br.com.market.service.controller
 
+import br.com.market.service.controller.ControllerConstants.TIMEOUT
 import br.com.market.service.dto.CompanyDTO
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
@@ -15,28 +16,28 @@ import org.springframework.web.bind.annotation.*
 class CompanyController(private val service: CompanyService) {
 
     @GetMapping
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun findAll(): ResponseEntity<ReadResponse<CompanyDTO>> {
         val values = service.findAll()
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun save(@RequestBody @Valid companyDTO: CompanyDTO): ResponseEntity<PersistenceResponse> {
         service.save(companyDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping("/toggleActive")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun toggleActive(@RequestParam companyId: Long): ResponseEntity<PersistenceResponse> {
         service.toggleActive(companyId)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @GetMapping("/{deviceId}")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun findByDeviceId(@PathVariable deviceId: String): ResponseEntity<ReadResponse<CompanyDTO>> {
         val company = service.findByDeviceId(deviceId)
 

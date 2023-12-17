@@ -1,5 +1,6 @@
 package br.com.market.service.controller
 
+import br.com.market.service.controller.ControllerConstants.TIMEOUT
 import br.com.market.service.dto.MarketDTO
 import br.com.market.service.dto.MarketReadDTO
 import br.com.market.service.response.PersistenceResponse
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 class MarketController(private val service: MarketService) {
 
     @GetMapping("/lov")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun getListLovMarketReadSDO(
         @RequestParam simpleFilter: String?,
         @RequestParam marketId: Long,
@@ -28,21 +29,21 @@ class MarketController(private val service: MarketService) {
     }
 
     @PostMapping
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun save(@RequestBody @Valid marketDTO: MarketDTO): ResponseEntity<PersistenceResponse> {
         service.save(marketDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping("/toggleActive")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun toggleActive(@RequestParam marketId: Long): ResponseEntity<PersistenceResponse> {
         service.toggleActive(marketId)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @GetMapping("/{deviceId}")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun findByDeviceId(@PathVariable deviceId: String): ResponseEntity<ReadResponse<MarketDTO>> {
         val market = service.findByDeviceId(deviceId)
 

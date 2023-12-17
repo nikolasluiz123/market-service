@@ -48,9 +48,11 @@ class ExceptionHandler {
     @ExceptionHandler(Exception::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handlerExceptions(exception: Exception): PersistenceResponse {
+        exception.printStackTrace()
+
         return PersistenceResponse(
             code = HttpStatus.BAD_REQUEST.value(),
-            error = exception.message
+            error = exception.message ?: "Ocorreu um erro não tratado."
         )
     }
 }

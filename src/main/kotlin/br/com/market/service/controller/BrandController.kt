@@ -1,5 +1,6 @@
 package br.com.market.service.controller
 
+import br.com.market.service.controller.ControllerConstants.TIMEOUT
 import br.com.market.service.dto.BrandAndReferencesDTO
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
@@ -16,21 +17,21 @@ import org.springframework.web.bind.annotation.*
 class BrandController(private val service: BrandService) {
 
     @PostMapping
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun save(@RequestBody @Valid brandBodyDTO: BrandAndReferencesDTO): ResponseEntity<PersistenceResponse> {
         service.save(brandBodyDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping("/toggleActive/{categoryId}/{brandId}")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun toggleActive(@PathVariable categoryId: String, @PathVariable brandId: String): ResponseEntity<PersistenceResponse> {
         service.toggleActive(categoryId, brandId)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @GetMapping
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun getListBrand(
         @RequestParam simpleFilter: String?,
         @RequestParam categoryLocalId: String?,
@@ -43,7 +44,7 @@ class BrandController(private val service: BrandService) {
     }
 
     @GetMapping("/{categoryId}/{brandId}")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun findBrandByLocalId(@PathVariable categoryId: String, @PathVariable brandId: String): ResponseEntity<SingleValueResponse<BrandAndReferencesDTO>> {
         val value = service.findBrandByLocalId(categoryId = categoryId, brandId = brandId)
         return ResponseEntity.ok(SingleValueResponse(value = value, code = HttpStatus.OK.value(), success = true))

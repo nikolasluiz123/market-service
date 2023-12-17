@@ -1,5 +1,6 @@
 package br.com.market.service.controller
 
+import br.com.market.service.controller.ControllerConstants.TIMEOUT
 import br.com.market.service.dto.StorageOperationHistoryDTO
 import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.PersistenceResponse
@@ -10,35 +11,34 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @RequestMapping("/api/v1/storageOperationsHistory")
 class StorageOperationsHistoryController(private val service: StorageOperationsHistoryService) {
 
     @PostMapping
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun save(@RequestBody @Valid storageOperationHistoryDTO: StorageOperationHistoryDTO): ResponseEntity<PersistenceResponse> {
         service.save(storageOperationHistoryDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping("/inactivate")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun inactivate(@RequestParam localId: String): ResponseEntity<PersistenceResponse> {
         service.inactivate(localId)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @PostMapping("/sync")
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun sync(@RequestBody @Valid storageOperationHistoryDTOS: List<StorageOperationHistoryDTO>): ResponseEntity<MarketServiceResponse> {
         service.sync(storageOperationHistoryDTOS)
         return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
     @GetMapping
-    @Transactional(timeout = 600)
+    @Transactional(timeout = TIMEOUT)
     fun findStorageOperationsHistoryDTOs(
         @RequestParam marketId: Long,
         @RequestParam limit: Int? = null,
