@@ -1,11 +1,14 @@
 package br.com.market.service.controller
 
 import br.com.market.service.controller.ControllerConstants.TIMEOUT
+import br.com.market.service.controller.params.ProductServiceSearchParams
+import br.com.market.service.controller.params.StorageOperationsHistoryServiceSearchParams
+import br.com.market.service.dto.ProductAndReferencesDTO
 import br.com.market.service.dto.StorageOperationHistoryDTO
-import br.com.market.service.response.MarketServiceResponse
 import br.com.market.service.response.PersistenceResponse
 import br.com.market.service.response.ReadResponse
 import br.com.market.service.service.StorageOperationsHistoryService
+import com.google.gson.Gson
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -30,21 +33,12 @@ class StorageOperationsHistoryController(private val service: StorageOperationsH
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 
-    @PostMapping("/sync")
-    @Transactional(timeout = TIMEOUT)
-    fun sync(@RequestBody @Valid storageOperationHistoryDTOS: List<StorageOperationHistoryDTO>): ResponseEntity<MarketServiceResponse> {
-        service.sync(storageOperationHistoryDTOS)
-        return ResponseEntity.ok(MarketServiceResponse(code = HttpStatus.OK.value(), success = true))
-    }
-
     @GetMapping
     @Transactional(timeout = TIMEOUT)
-    fun findStorageOperationsHistoryDTOs(
-        @RequestParam marketId: Long,
-        @RequestParam limit: Int? = null,
-        @RequestParam offset: Int? = null
-    ): ResponseEntity<ReadResponse<StorageOperationHistoryDTO>> {
-        val values = service.findStorageOperationsHistoryDTOs(marketId, limit, offset)
+    fun getListStorageOperations(@RequestParam("jsonParams") jsonParams: String): ResponseEntity<ReadResponse<StorageOperationHistoryDTO>> {
+        val params = Gson().fromJson(jsonParams, StorageOperationsHistoryServiceSearchParams::class.java)
+        val values = service.getListStorageOperations(params)
+
         return ResponseEntity.ok(ReadResponse(values = values, code = HttpStatus.OK.value(), success = true))
     }
 }

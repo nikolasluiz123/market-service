@@ -1,5 +1,6 @@
 package br.com.market.service.service
 
+import br.com.market.service.controller.params.StorageOperationsHistoryServiceSearchParams
 import br.com.market.service.dto.StorageOperationHistoryDTO
 import br.com.market.service.models.StorageOperationHistory
 import br.com.market.service.repository.market.IMarketRepository
@@ -73,6 +74,10 @@ class StorageOperationsHistoryService(
         customStorageOperationsHistoryRepository.findStorageOperationHistoryByLocalId(localId)?.let {
             storageOperationsHistoryRepository.save(it.copy(active = false))
         }
+    }
+
+    fun getListStorageOperations(params: StorageOperationsHistoryServiceSearchParams): List<StorageOperationHistoryDTO> {
+        return customStorageOperationsHistoryRepository.getListStorageOperations(params)
     }
 
 }
