@@ -2,18 +2,21 @@ package br.com.market.service.repository.storageoperationshistory
 
 import br.com.market.service.controller.params.StorageOperationsHistoryServiceSearchParams
 import br.com.market.service.dto.StorageOperationHistoryDTO
+import br.com.market.service.extensions.getResultList
 import br.com.market.service.extensions.setParameters
 import br.com.market.service.models.StorageOperationHistory
+import br.com.market.service.models.enumeration.EnumOperationType
 import br.com.market.service.query.Parameter
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import jakarta.persistence.PersistenceContext
 import jakarta.persistence.Tuple
 import org.springframework.stereotype.Repository
+import java.time.LocalDateTime
 import java.util.*
 
 @Repository
-class CustomStorageOperationsHistoryRepositoryImpl: ICustomStorageOperationsHistoryRepository{
+class CustomStorageOperationsHistoryRepositoryImpl : ICustomStorageOperationsHistoryRepository {
 
     @PersistenceContext
     private lateinit var entityManager: EntityManager
@@ -67,11 +70,13 @@ class CustomStorageOperationsHistoryRepositoryImpl: ICustomStorageOperationsHist
 
         with(select) {
             add(" select op.local_id as localId, ")
+            add("        op.id as id, ")
             add("        op.date_realization as dateRealization, ")
             add("        op.date_prevision as datePrevision, ")
             add("        op.operation_type as operationType, ")
             add("        op.description as description, ")
             add("        op.quantity as quantity, ")
+            add("        op.market_id as marketId, ")
             add("        p.local_id as productId, ")
             add("        u.local_id as userId ")
         }
@@ -114,7 +119,7 @@ class CustomStorageOperationsHistoryRepositoryImpl: ICustomStorageOperationsHist
 
             if (params.filters.productName.isFilterApplied()) {
                 add(" and p.name ilike :pProductName ")
-                queryParams.add(Parameter("pProductName","%${params.filters.productName.value}%"))
+                queryParams.add(Parameter("pProductName", "%${params.filters.productName.value}%"))
             }
 
             if (params.filters.description.isFilterApplied()) {
@@ -132,10 +137,12 @@ class CustomStorageOperationsHistoryRepositoryImpl: ICustomStorageOperationsHist
                         queryParams.add(Parameter("pDateFrom", dateFrom))
                         queryParams.add(Parameter("pDateTo", dateTo))
                     }
+
                     dateFrom != null -> {
                         add(" and op.date_prevision >= :pDateFrom ")
                         queryParams.add(Parameter("pDateFrom", dateFrom))
                     }
+
                     dateTo != null -> {
                         add(" and op.date_prevision <= :pDateTo ")
                         queryParams.add(Parameter("pDateTo", dateTo))
@@ -153,10 +160,12 @@ class CustomStorageOperationsHistoryRepositoryImpl: ICustomStorageOperationsHist
                         queryParams.add(Parameter("pDateFrom", dateFrom))
                         queryParams.add(Parameter("pDateTo", dateTo))
                     }
+
                     dateFrom != null -> {
                         add(" and op.date_realization >= :pDateFrom ")
                         queryParams.add(Parameter("pDateFrom", dateFrom))
                     }
+
                     dateTo != null -> {
                         add(" and op.date_realization <= :pDateTo ")
                         queryParams.add(Parameter("pDateTo", dateTo))
@@ -189,5 +198,21 @@ class CustomStorageOperationsHistoryRepositoryImpl: ICustomStorageOperationsHist
 
         val query = entityManager.createNativeQuery(sql.toString(), Tuple::class.java)
         query.setParameters(queryParams)
+
+        return query.getResultList(Tuple::class.java).map { tuple ->
+            StorageOperationHistoryDTO(
+                    localId = tuple.get("localId", String::class.javaObjectType),
+                    id = tuple.get("id", Long::class.javaObjectType),
+                    active = true,
+                    marketId = tuple.get("marketId", Long::class.javaObjectType),
+                    productId = tuple.get("productId", String::class.javaObjectType),
+                    quantity = tuple.get("quantity", Int::class.javaObjectType),
+                    dateRealization = tuple.get("dateRealization", LocalDateTime::class.javaObjectType),
+                    datePrevision = tuple.get("datePrevision", LocalDateTime::class.javaObjectType),
+                    operationType = tuple.get("operationType", EnumOperationType::class.javaObjectType),
+                    description = tuple.get("description", String::class.javaObjectType),
+                    userId = tuple.get("userId", String::class.javaObjectType)
+            )
+        }
     }
 }
