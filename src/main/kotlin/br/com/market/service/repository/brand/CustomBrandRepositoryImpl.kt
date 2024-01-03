@@ -84,7 +84,7 @@ class CustomBrandRepositoryImpl : ICustomBrandRepository {
         val from = StringJoiner("\n\t")
         with(from) {
             add(" from brands b ")
-            add(" inner join categories_brands cb on cb.brand_id = b.id ")
+            add(" inner join categories_brands cb on cb.brand_id = b.id and cb.active ")
             add(" inner join categories c on c.id = cb.category_id ")
         }
 
@@ -140,7 +140,8 @@ class CustomBrandRepositoryImpl : ICustomBrandRepository {
                     active = true,
                     localId = tuple.get("categoryBrandLocalId", String::class.javaObjectType),
                     localCategoryId = tuple.get("categoryBrandCategoryLocalId", String::class.javaObjectType),
-                    localBrandId = tuple.get("brandLocalId", String::class.javaObjectType)
+                    localBrandId = tuple.get("brandLocalId", String::class.javaObjectType),
+                    marketId = tuple.get("brandMarketId", Long::class.javaObjectType)
                 )
             )
         }
