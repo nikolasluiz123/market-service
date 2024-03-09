@@ -32,6 +32,7 @@ class MarketController(private val service: MarketService) {
     @Transactional(timeout = TIMEOUT)
     fun save(@RequestBody @Valid marketDTO: MarketDTO): ResponseEntity<PersistenceResponse> {
         service.save(marketDTO)
+        service.import(marketDTO)
         return ResponseEntity.ok(PersistenceResponse(code = HttpStatus.OK.value(), success = true))
     }
 

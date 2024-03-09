@@ -7,5 +7,6 @@ data class MarketDTO(
     override var active: Boolean = true,
     var address: AddressDTO? = null,
     var name: String? = null,
-    var companyId: Long? = null
+    var companyId: Long? = null,
+    var config: MarketImportConfigDTO? = null
 ): BaseDTO()

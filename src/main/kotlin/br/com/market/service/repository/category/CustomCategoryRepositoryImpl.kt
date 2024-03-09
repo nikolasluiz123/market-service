@@ -40,7 +40,7 @@ class CustomCategoryRepositoryImpl : ICustomCategoryRepository {
         }
     }
 
-    override fun getListCategory(simpleFilter: String?, marketId: Long, limit: Int, offset: Int): List<CategoryDTO> {
+    override fun getListCategory(simpleFilter: String?, marketId: Long, limit: Int?, offset: Int?): List<CategoryDTO> {
         val params = mutableListOf<Parameter>()
         val select = StringJoiner("\n\t")
 
@@ -84,10 +84,12 @@ class CustomCategoryRepositoryImpl : ICustomCategoryRepository {
             add(from.toString())
             add(where.toString())
             add(orderBy.toString())
-            add("limit :pLimit offset :pOffset ")
 
-            params.add(Parameter("pLimit", limit))
-            params.add(Parameter("pOffset", offset))
+            if (limit != null && offset != null) {
+                add("limit :pLimit offset :pOffset ")
+                params.add(Parameter("pLimit", limit))
+                params.add(Parameter("pOffset", offset))
+            }
         }
 
         val query = entityManager.createNativeQuery(sql.toString(), Tuple::class.java)
